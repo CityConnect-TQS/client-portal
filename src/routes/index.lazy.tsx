@@ -1,6 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable @typescript-eslint/consistent-type-definitions */
-/* eslint-disable react-refresh/only-export-components */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import {
   DatePicker,
@@ -8,11 +7,12 @@ import {
   Autocomplete,
   AutocompleteItem,
 } from "@nextui-org/react";
-import { createLazyFileRoute } from "@tanstack/react-router";
+import { Link, createLazyFileRoute } from "@tanstack/react-router";
 import { parseAbsoluteToLocal } from "@internationalized/date";
-import React, { createContext, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import { NavbarClient } from "@/components/navbar";
-import { useCookies } from "react-cookie";
+import { CookiesProvider } from "react-cookie";
+import { Cookies } from 'react-cookie';
 import { useQuery } from "@tanstack/react-query";
 import { City } from "@/types/city";
 import { getCities } from "@/service/cityService";
@@ -21,12 +21,12 @@ export const Route = createLazyFileRoute("/")({
   component: Index,
 });
 
-type a = {
+interface a {
   departure: number;
   setDeparture: (id: number) => void;
   arrival: number;
   departureTime: string;
-};
+}
 
 export const TripSearchContext = createContext<a>({
   departure: 0,
@@ -35,19 +35,27 @@ export const TripSearchContext = createContext<a>({
   departureTime: "",
 });
 
+const cookies = new Cookies();
+
 function Index() {
   const [date, setDate] = React.useState(new Date());
   const formattedDate = date.toISOString();
-  const [cookies] = useCookies();
-
   const [departure, setDeparture] = useState<number>(0);
   const [arrival, setArrival] = useState<number>(0);
-  // const [departureTime, setDepartureTime] = useState<string>("");
+  const [searchEnabled, setSearchEnabled] = useState<boolean>(false);
 
   const { data: cities } = useQuery<City[]>({
     queryKey: ["cities"],
     queryFn: () => getCities(),
   });
+
+  useEffect(() => {
+    if (departure !== 0 && arrival !== 0) {
+      setSearchEnabled(true);
+    } else {
+      setSearchEnabled(false);
+    }
+  }, [departure, arrival]);
 
   return (
     <div className="p-2 h-screen flex flex-col">
@@ -108,18 +116,23 @@ function Index() {
               value={parseAbsoluteToLocal(formattedDate)}
               onChange={(date) => setDate(date.toDate())}
             />
-            <Button
-              color="primary"
-              size="lg"
-              className="h-14"
-              onClick={() => {
-                cookies.set("departure", departure.toString());
-                cookies.set("arrival", arrival.toString());
-                cookies.set("departureTime", formattedDate);
-              }}
-            >
-              Search
-            </Button>
+            <Link to={"/trips/page"}>
+              <CookiesProvider>
+                <Button
+                  color="primary"
+                  size="lg"
+                  className="h-14"
+                  isDisabled={!searchEnabled}
+                  onClick={() => {
+                    cookies.set("departure", departure.toString());
+                    cookies.set("arrival", arrival.toString());
+                    cookies.set("date", formattedDate);
+                  }}
+                >
+                  Search
+                </Button>
+              </CookiesProvider>
+            </Link>
           </div>
         </div>
       </div>
