@@ -69,6 +69,6 @@ export const currencyCodes: Currency[] = [
   "ZAR",
 ];
 
-export type CurrencyParams = {
+export interface CurrencyParams {
   currency?: Currency;
-};
+}
