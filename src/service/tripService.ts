@@ -1,10 +1,16 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { Trip, TripCreate, TripSearchParameters } from "@/types/trip";
 import { BASE_API_URL } from "./config";
 import { CurrencyParams } from "@/types/currency";
 import { Reservation } from "@/types/reservation";
 
 export const createTrip = async (trip: TripCreate): Promise<Trip> =>
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   fetch(BASE_API_URL + "trip", {
     method: "POST",
     headers: {
@@ -19,7 +25,6 @@ export const getTrips = async (
   const res = await fetch(
     BASE_API_URL +
       "trip?" +
-      // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
       new URLSearchParams(params as Record<string, string>),
     {
       headers: {

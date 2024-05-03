@@ -35,13 +35,6 @@ export const TripSearchContext = createContext<a>({
   departureTime: "",
 });
 
-export const staticCities = [
-  { value: "1", label: "Aveiro" },
-  { value: "2", label: "Ovar" },
-  { value: "3", label: "Castelo Branco" },
-  { value: "4", label: "Fortaleza" },
-];
-
 function Index() {
   const [date, setDate] = React.useState(new Date());
   const formattedDate = date.toISOString();
@@ -114,7 +107,6 @@ function Index() {
               granularity="day"
               value={parseAbsoluteToLocal(formattedDate)}
               onChange={(date) => setDate(date.toDate())}
-              isRequired
             />
             <Button
               color="primary"
