@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import {
   DatePicker,
   Button,
@@ -9,39 +6,28 @@ import {
 } from "@nextui-org/react";
 import { Link, createLazyFileRoute } from "@tanstack/react-router";
 import { parseAbsoluteToLocal } from "@internationalized/date";
-import React, { createContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { NavbarClient } from "@/components/navbar";
-import { CookiesProvider } from "react-cookie";
-import { Cookies } from 'react-cookie';
 import { useQuery } from "@tanstack/react-query";
 import { City } from "@/types/city";
 import { getCities } from "@/service/cityService";
+import { TripSearchContext } from "@/utils/tripsContext";
 
 export const Route = createLazyFileRoute("/")({
   component: Index,
 });
 
-interface a {
-  departure: number;
-  setDeparture: (id: number) => void;
-  arrival: number;
-  departureTime: string;
-}
-
-export const TripSearchContext = createContext<a>({
-  departure: 0,
-  setDeparture: () => {},
-  arrival: 0,
-  departureTime: "",
-});
-
-const cookies = new Cookies();
-
 function Index() {
   const [date, setDate] = React.useState(new Date());
   const formattedDate = date.toISOString();
-  const [departure, setDeparture] = useState<number>(0);
-  const [arrival, setArrival] = useState<number>(0);
+  const {
+    departure,
+    setDeparture,
+    arrival,
+    setArrival,
+    departureTime,
+    setDepartureTime,
+  } = useContext(TripSearchContext);
   const [searchEnabled, setSearchEnabled] = useState<boolean>(false);
 
   const { data: cities } = useQuery<City[]>({
@@ -49,6 +35,7 @@ function Index() {
     queryFn: () => getCities(),
   });
 
+  // refactorizar
   useEffect(() => {
     if (departure !== 0 && arrival !== 0) {
       setSearchEnabled(true);
@@ -117,21 +104,15 @@ function Index() {
               onChange={(date) => setDate(date.toDate())}
             />
             <Link to={"/trips/page"}>
-              <CookiesProvider>
-                <Button
-                  color="primary"
-                  size="lg"
-                  className="h-14"
-                  isDisabled={!searchEnabled}
-                  onClick={() => {
-                    cookies.set("departure", departure.toString());
-                    cookies.set("arrival", arrival.toString());
-                    cookies.set("date", formattedDate);
-                  }}
-                >
-                  Search
-                </Button>
-              </CookiesProvider>
+              <Button
+                color="primary"
+                size="lg"
+                className="h-14"
+                isDisabled={!searchEnabled}
+                onClick={() => {}}
+              >
+                Search
+              </Button>
             </Link>
           </div>
         </div>
