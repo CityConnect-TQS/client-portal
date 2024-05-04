@@ -5,8 +5,7 @@ import {
   AutocompleteItem,
 } from "@nextui-org/react";
 import { Link, createLazyFileRoute } from "@tanstack/react-router";
-import { parseAbsoluteToLocal } from "@internationalized/date";
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { NavbarClient } from "@/components/navbar";
 import { useQuery } from "@tanstack/react-query";
 import { City } from "@/types/city";
@@ -18,16 +17,8 @@ export const Route = createLazyFileRoute("/")({
 });
 
 function Index() {
-  const [date, setDate] = React.useState(new Date());
-  const formattedDate = date.toISOString();
-  const {
-    departure,
-    setDeparture,
-    arrival,
-    setArrival,
-    departureTime,
-    setDepartureTime,
-  } = useContext(TripSearchContext);
+  const { departure, setDeparture, arrival, setArrival, setDepartureTime } =
+    useContext(TripSearchContext);
   const [searchEnabled, setSearchEnabled] = useState<boolean>(false);
 
   const { data: cities } = useQuery<City[]>({
@@ -60,9 +51,9 @@ function Index() {
               label="From"
               id="origin"
               className="max-w-xs"
-              onSelectionChange={(id) =>
-                setDeparture(id ? parseInt(id.toString()) : 0)
-              }
+              onSelectionChange={(value) => {
+                setDeparture(value ? parseInt(value.toString()) : 0);
+              }}
             >
               {cities
                 ? cities.map((city: City) => (
@@ -80,9 +71,9 @@ function Index() {
               label="To"
               id="destination"
               className="max-w-xs"
-              onSelectionChange={(id) =>
-                setArrival(id ? parseInt(id.toString()) : 0)
-              }
+              onSelectionChange={(value) => {
+                setArrival(value ? parseInt(value.toString()) : 0);
+              }}
             >
               {cities
                 ? cities.map((city) => (
@@ -90,6 +81,7 @@ function Index() {
                       key={city.id}
                       value={city.name}
                       id={"arrival" + city.id}
+                      onChange={() => setArrival(city.id)}
                     >
                       {city.name}
                     </AutocompleteItem>
@@ -100,8 +92,7 @@ function Index() {
               label="Departure"
               className="max-w-xs"
               granularity="day"
-              value={parseAbsoluteToLocal(formattedDate)}
-              onChange={(date) => setDate(date.toDate())}
+              onChange={(date) => setDepartureTime(date.toString())}
             />
             <Link to={"/trips/page"}>
               <Button
@@ -109,7 +100,6 @@ function Index() {
                 size="lg"
                 className="h-14"
                 isDisabled={!searchEnabled}
-                onClick={() => {}}
               >
                 Search
               </Button>

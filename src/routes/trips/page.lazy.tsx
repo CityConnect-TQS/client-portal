@@ -7,26 +7,24 @@ import {
 import { City } from "@/types/city";
 import { useQuery } from "@tanstack/react-query";
 import { getCities } from "@/service/cityService";
-import { Trip } from "@/types/trip";
-import { getTrips } from "@/service/tripService";
+// import { Trip } from "@/types/trip";
+// import { getTrips } from "@/service/tripService";
 import { useState } from "react";
-// import { Currency } from "@/types/currency";
-import { useCookies } from "react-cookie";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { NavbarClient } from "@/components/navbar";
-import TripCard from "@/components/tripcard";
-import { TripSearchContext } from "@/app";
+// import TripCard from "@/components/tripcard";
+import { TripSearchContext } from "@/utils/tripsContext";
 
 export const Route = createLazyFileRoute("/trips/page")({
   component: Trips,
 });
 
 export default function Trips() {
-  const [cookies] = useCookies();
-
-  const [departureTime, setDepartureTime] = useState<string>(
-    new Date().toISOString().substring(0, 10)
-  );
+  // const [departureValue, setDepartureValue] = useState<number>(0);
+  // const [arrivalValue, setArrivalValue] = useState<number>(0);
+  const [seatsValue, setSeatsValue] = useState<number>(1);
+  // const [currency] = useState<string>("EUR");
+  // const [departureTimeValue, setDepartureTimeValue] = useState<string>('');
 
   const { isPending: isCitiesPending, data: cities } =
     useQuery<City[]>({
@@ -34,27 +32,25 @@ export default function Trips() {
       queryFn: () => getCities(),
     }) || [];
 
-  const { isPending: isTripsPending, data: trips } =
-    useQuery<Trip[]>({
-      queryKey: [
-        "trips",
-        { departure, arrival, seats, departureTime, currency },
-      ],
-      queryFn: () =>
-        getTrips({
-          departure,
-          arrival,
-          seats,
-          departureTime: departureTime + "T00:00:00",
-          currency,
-        }),
-    }) || [];
+  // const { isPending: isTripsPending, data: trips } = null;
+    // useQuery<Trip[]>({
+    //   // queryKey: [
+    //   //   "trips",
+    //   //   { departure: departureValue, arrival: arrivalValue, seats: seatsValue, departureTime: departureTimeValue, currency },
+    //   // ],
+    //   queryFn: () =>
+    //     getTrips({
+    //       departure: departureValue,
+    //       arrival: arrivalValue,
+    //       seats: seatsValue,
+    //       departureTime: departureTimeValue + "T00:00:00"
+    //     }),
+    // }) || [];
 
   return (
     <TripSearchContext.Consumer>
       {(contextValue) => {
-        const { departure, arrival } = contextValue;
-        console.log(contextValue);
+        console.log(contextValue.arrival, contextValue.departure, contextValue.departureTime);
         return (
           <div className="flex flex-col gap-8">
             <NavbarClient />
@@ -69,10 +65,7 @@ export default function Trips() {
                       label="Departure"
                       id="departure"
                       className="max-w-xs"
-                      defaultSelectedKey={departure}
-                      onSelectionChange={(value) => {
-                        setDeparture(value ? parseInt(value.toString()) : 0);
-                      }}
+                      defaultSelectedKey={contextValue.departure}
                     >
                       {cities
                         ? cities.map((city: City) => (
@@ -92,10 +85,7 @@ export default function Trips() {
                       label="Arrival"
                       id="arrival"
                       className="max-w-xs"
-                      defaultSelectedKey={arrival}
-                      onSelectionChange={(value) => {
-                        setArrival(value ? parseInt(value.toString()) : 0);
-                      }}
+                      defaultSelectedKey={contextValue.arrival}
                     >
                       {cities
                         ? cities.map((city) => (
@@ -118,9 +108,9 @@ export default function Trips() {
                     id="seatsInput"
                     min={1}
                     className="w-full lg:max-w-24"
-                    defaultValue={seats.toString()}
+                    defaultValue={seatsValue.toString()}
                     onValueChange={(value) => {
-                      setSeats(value ? parseInt(value.toString()) : 0);
+                      setSeatsValue(value ? parseInt(value.toString()) : 0);
                     }}
                   />
                   <Input
@@ -128,14 +118,12 @@ export default function Trips() {
                     label="Date"
                     id="departureTimeInput"
                     className="max-w-xs"
-                    onValueChange={(value) => {
-                      setDepartureTime(value);
-                    }}
+                    defaultValue={contextValue.departureTime}
                   />
                 </div>
               </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 px-4 md:px-8 lg:px-16 gap-8">
+            {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 px-4 md:px-8 lg:px-16 gap-8">
               {trips?.map((trip) => (
                 <TripCard
                   key={trip.id}
@@ -143,7 +131,7 @@ export default function Trips() {
                   trip={trip}
                 />
               ))}
-            </div>
+            </div> */}
           </div>
         );
       }}
