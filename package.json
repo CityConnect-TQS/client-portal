@@ -23,6 +23,7 @@
     "react-cookie": "^7.1.4",
     "react-dom": "^18.2.0",
     "react-material-symbols": "^4.4.0",
+    "react-router-dom": "^6.23.0",
     "tailwind-merge": "^2.3.0"
   },
   "devDependencies": {

@@ -5,26 +5,30 @@ import {
   AutocompleteItem,
 } from "@nextui-org/react";
 import { Link, createLazyFileRoute } from "@tanstack/react-router";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { NavbarClient } from "@/components/navbar";
 import { useQuery } from "@tanstack/react-query";
 import { City } from "@/types/city";
 import { getCities } from "@/service/cityService";
-import { TripSearchContext } from "@/utils/tripsContext";
 
 export const Route = createLazyFileRoute("/")({
   component: Index,
 });
 
 function Index() {
-  const { departure, setDeparture, arrival, setArrival, setDepartureTime } =
-    useContext(TripSearchContext);
+  const [departure, setDeparture] = useState<number>(0);
+  const [arrival, setArrival] = useState<number>(0);
+  const [departureTime, setDepartureTime] = useState<string>(
+    new Date().toISOString().substring(0, 10)
+  );
   const [searchEnabled, setSearchEnabled] = useState<boolean>(false);
 
   const { data: cities } = useQuery<City[]>({
     queryKey: ["cities"],
     queryFn: () => getCities(),
   });
+
+  // cada vez que escolher uma nova pagina, no onselecion change, refresh da página. não usar states.
 
   // refactorizar
   useEffect(() => {
@@ -44,7 +48,7 @@ function Index() {
             Welcome to CityConnect
           </h1>
           <h2 className="text-2xl font-semibold mb-8 text-center">
-            Your endless journeys start here.
+            Your endless journeys start here. {departure}
           </h2>
           <div className="flex flex-col items-center w-full space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4 text-center">
             <Autocomplete
@@ -94,7 +98,14 @@ function Index() {
               granularity="day"
               onChange={(date) => setDepartureTime(date.toString())}
             />
-            <Link to={"/trips/page"}>
+            <Link
+              to="/trips/page"
+              search={{
+                departure: departure,
+                arrival: arrival,
+                departureTime: departureTime,
+              }}
+            >
               <Button
                 color="primary"
                 size="lg"
