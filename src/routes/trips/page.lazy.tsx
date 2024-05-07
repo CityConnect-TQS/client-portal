@@ -3,6 +3,7 @@ import {
   AutocompleteItem,
   Input,
   Skeleton,
+  Spinner,
 } from "@nextui-org/react";
 import { City } from "@/types/city";
 import { useQuery } from "@tanstack/react-query";
@@ -10,19 +11,30 @@ import { getCities } from "@/service/cityService";
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { NavbarClient } from "@/components/navbar";
-import { useLocation } from "react-router-dom";
+import { getTrips } from "@/service/tripService";
+import TripCard from "@/components/tripcard";
+import { Currency } from "@/types/currency";
 
 type Trip = {
-  departure: string;
-  arrival: string;
+  departure: number;
+  arrival: number;
   departureTime: string;
+};
+
+type trip = {
+  id: number;
+  departure: number;
+  arrival: number;
+  departureTime: string;
+  price: number;
+  currency: string;
 };
 
 export const Route = createFileRoute("/trips/page")({
   validateSearch: (search: Record<string, unknown>): Trip => {
     return {
-      departure: search.departure as string,
-      arrival: search.arrival as string,
+      departure: search.departure as number,
+      arrival: search.arrival as number,
       departureTime: search.departureTime as string,
     };
   },
@@ -31,15 +43,32 @@ export const Route = createFileRoute("/trips/page")({
 
 export default function Trips() {
   const [seatsValue, setSeatsValue] = useState<number>(1);
+  const currency: Currency =  "EUR";
+  const seats = seatsValue;
+
+  const { departure, arrival, departureTime } = Route.useSearch();
+
   const { isPending: isCitiesPending, data: cities } =
     useQuery<City[]>({
       queryKey: ["cities"],
       queryFn: () => getCities(),
     }) || [];
 
-  const {departure, arrival, departureTime} = Route.useSearch();
-
-  console.log(departure, arrival, departureTime);
+  const { isPending: isTripsPending, data: trips } =
+    useQuery<Trip[]>({
+      queryKey: [
+        "trips",
+        { departure, arrival, seats, departureTime, currency },
+      ],
+      queryFn: () =>
+        getTrips({
+          departure,
+          arrival,
+          seats,
+          departureTime: departureTime + "T00:00:00",
+          currency,
+        }),
+    }) || [];
 
   return (
     <div className="flex flex-col gap-8">
@@ -55,7 +84,7 @@ export default function Trips() {
                 label="Departure"
                 id="departure"
                 className="max-w-xs"
-                defaultSelectedKey={departure ?? undefined}
+                defaultSelectedKey={departure.toString()}
               >
                 {cities
                   ? cities.map((city: City) => (
@@ -75,7 +104,7 @@ export default function Trips() {
                 label="Arrival"
                 id="arrival"
                 className="max-w-xs"
-                defaultSelectedKey={arrival ?? undefined}
+                defaultSelectedKey={arrival.toString()}
               >
                 {cities
                   ? cities.map((city) => (
@@ -117,15 +146,18 @@ export default function Trips() {
           </div>
         </div>
       </div>
-      {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 px-4 md:px-8 lg:px-16 gap-8">
-            {trips?.map((trip) => (
-              <TripCard
-                key={trip.id}
-                isLoaded={!isTripsPending}
-                trip={trip}
-              />
-            ))}
-          </div> */}
+      {isCitiesPending ? (
+        <div className="flex flex-col gap-4 items-center">
+          <Spinner />
+          <p>Loading trips...</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 px-4 md:px-8 lg:px-16 gap-8">
+          {trips?.map((trip) => (
+            <TripCard key={trip.id} isLoaded={!isTripsPending} trip={trip} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
