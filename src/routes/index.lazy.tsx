@@ -28,9 +28,6 @@ function Index() {
     queryFn: () => getCities(),
   });
 
-  // cada vez que escolher uma nova pagina, no onselecion change, refresh da página. não usar states.
-
-  // refactorizar
   useEffect(() => {
     if (departure !== 0 && arrival !== 0) {
       setSearchEnabled(true);

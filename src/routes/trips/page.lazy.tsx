@@ -15,20 +15,20 @@ import { getTrips } from "@/service/tripService";
 import TripCard from "@/components/tripcard";
 import { Currency } from "@/types/currency";
 
-type Trip = {
+interface Trip {
   departure: number;
   arrival: number;
   departureTime: string;
-};
+}
 
-type trip = {
+interface trip {
   id: number;
   departure: number;
   arrival: number;
   departureTime: string;
   price: number;
   currency: string;
-};
+}
 
 export const Route = createFileRoute("/trips/page")({
   validateSearch: (search: Record<string, unknown>): Trip => {
