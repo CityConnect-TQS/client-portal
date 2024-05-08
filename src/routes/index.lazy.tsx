@@ -4,14 +4,12 @@ import {
   Autocomplete,
   AutocompleteItem,
 } from "@nextui-org/react";
-import { createLazyFileRoute } from "@tanstack/react-router";
+import { Link, createLazyFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { NavbarClient } from "@/components/navbar";
 import { useQuery } from "@tanstack/react-query";
 import { City } from "@/types/city";
 import { getCities } from "@/service/cityService";
-import { useCookies } from "react-cookie";
-import { Link } from "react-router-dom";
 
 export const Route = createLazyFileRoute("/")({
   component: Index,
@@ -20,7 +18,6 @@ export const Route = createLazyFileRoute("/")({
 function Index() {
   const [departure, setDeparture] = useState<number>(0);
   const [arrival, setArrival] = useState<number>(0);
-  const [, setCookies] = useCookies();
   const [departureTime, setDepartureTime] = useState<string>(
     new Date().toISOString().substring(0, 10)
   );
@@ -98,18 +95,19 @@ function Index() {
               granularity="day"
               onChange={(date) => setDepartureTime(date.toString())}
             />
-            <Link to={"/trips/page"}>
+            <Link
+              to="/trips/page"
+              search={{
+                departure: departure,
+                arrival: arrival,
+                departureTime: departureTime,
+              }}
+            >
               <Button
                 color="primary"
                 size="lg"
                 className="h-14"
                 isDisabled={!searchEnabled}
-                onClick={() => {
-                  setCookies("departureTime", departureTime);
-                  setCookies("departure", departure.toString());
-                  setCookies("arrival", arrival.toString());
-                  setCookies("seats", "1");
-                }}
               >
                 Search
               </Button>

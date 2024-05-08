@@ -1,6 +1,7 @@
 import {
   Autocomplete,
   AutocompleteItem,
+  Button,
   Input,
   Skeleton,
   Spinner,
@@ -9,7 +10,7 @@ import { City } from "@/types/city";
 import { useQuery } from "@tanstack/react-query";
 import { getCities } from "@/service/cityService";
 import { useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
 import { NavbarClient } from "@/components/navbar";
 import { getTrips } from "@/service/tripService";
 import TripCard from "@/components/tripcard";
@@ -33,6 +34,16 @@ export const Route = createFileRoute("/trips/page")({
   component: Trips,
 });
 
+const updateParameters = () => {
+  const queryParams = {
+    departure: state.departure,
+    arrival: state.arrival,
+    departureTime: state.departureTime,
+  };
+  const queryString = new URLSearchParams(queryParams).toString();
+  window.history.pushState({}, "", `/trips/page?${queryString}`);
+};
+
 export default function Trips() {
   const [seatsValue, setSeatsValue] = useState<number>(1);
   const currency: Currency = "EUR";
@@ -40,9 +51,18 @@ export default function Trips() {
 
   const { departure, arrival, departureTime } = Route.useSearch();
 
-  const [, setDepartureTime] = useState<string>(
-    new Date().toISOString().substring(0, 10)
-  );
+  const [state, setState] = useState({
+    arrival: 0,
+    departure: 0,
+    departureTime: new Date().toISOString().substring(0, 10),
+  });
+
+  const setArrival = (value: number) =>
+    setState((prevState) => ({ ...prevState, arrival: value }));
+  const setDeparture = (value: number) =>
+    setState((prevState) => ({ ...prevState, departure: value }));
+  const setDepartureTime = (value: string) =>
+    setState((prevState) => ({ ...prevState, departureTime: value }));
 
   const { isPending: isCitiesPending, data: cities } =
     useQuery<City[]>({
@@ -81,6 +101,11 @@ export default function Trips() {
                 id="departure"
                 className="max-w-xs"
                 defaultSelectedKey={departure.toString()}
+                onSelectionChange={(value) => {
+                  setDeparture(value ? parseInt(value.toString()) : 0);
+                  setArrival(arrival);
+                  setDepartureTime(departureTime);
+                }}
               >
                 {cities
                   ? cities.map((city: City) => (
@@ -101,6 +126,11 @@ export default function Trips() {
                 id="arrival"
                 className="max-w-xs"
                 defaultSelectedKey={arrival.toString()}
+                onSelectionChange={(value) => {
+                  setArrival(value ? parseInt(value.toString()) : 0);
+                  setDeparture(departure);
+                  setDepartureTime(departureTime);
+                }}
               >
                 {cities
                   ? cities.map((city) => (
@@ -126,6 +156,9 @@ export default function Trips() {
               defaultValue={seatsValue.toString()}
               onValueChange={(value) => {
                 setSeatsValue(value ? parseInt(value.toString()) : 0);
+                setArrival(arrival);
+                setDeparture(departure);
+                setDepartureTime(departureTime);
               }}
             />
             <Input
@@ -133,13 +166,35 @@ export default function Trips() {
               label="Date"
               id="departureTimeInput"
               className="max-w-xs"
-              onChange={(event) => setDepartureTime(event.target.value)}
+              onValueChange={(value) => {
+                setDepartureTime(value.toString());
+                setArrival(arrival);
+                setDeparture(departure);
+                setSeatsValue(seatsValue);
+              }}
               defaultValue={
                 departureTime
                   ? new Date(departureTime).toISOString().split("T")[0]
                   : undefined
               }
             />
+            <Link
+              to="/trips/page"
+              search={{
+                departure: state.departure,
+                arrival: state.arrival,
+                departureTime: state.departureTime,
+              }}
+            >
+              <Button
+                color="primary"
+                size="lg"
+                className="h-14"
+                onClick={updateParameters}
+              >
+                Search
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
