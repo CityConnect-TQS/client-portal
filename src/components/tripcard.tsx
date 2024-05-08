@@ -72,7 +72,7 @@ export default function TripCard({
               <p>
                 {trip.price.toLocaleString("pt-PT", {
                   style: "currency",
-                  currency: cookies.currency.toString() || "EUR",
+                  currency: cookies.currency || "EUR",
                 })}
               </p>
             </div>
