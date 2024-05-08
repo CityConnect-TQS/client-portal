@@ -14,8 +14,9 @@ import { NavbarClient } from "@/components/navbar";
 import { getTrips } from "@/service/tripService";
 import TripCard from "@/components/tripcard";
 import { Currency } from "@/types/currency";
+import { Trip } from "@/types/trip";
 
-interface Trip {
+interface tripInfo {
   departure: number;
   arrival: number;
   departureTime: string;
@@ -31,7 +32,7 @@ interface trip {
 }
 
 export const Route = createFileRoute("/trips/page")({
-  validateSearch: (search: Record<string, unknown>): Trip => {
+  validateSearch: (search: Record<string, unknown>): tripInfo => {
     return {
       departure: search.departure as number,
       arrival: search.arrival as number,
@@ -43,7 +44,7 @@ export const Route = createFileRoute("/trips/page")({
 
 export default function Trips() {
   const [seatsValue, setSeatsValue] = useState<number>(1);
-  const currency: Currency =  "EUR";
+  const currency: Currency = "EUR";
   const seats = seatsValue;
 
   const { departure, arrival, departureTime } = Route.useSearch();
@@ -54,7 +55,7 @@ export default function Trips() {
       queryFn: () => getCities(),
     }) || [];
 
-  const { isPending: isTripsPending, data: trips } =
+    const { isPending: isTripsPending, data: trips } =
     useQuery<Trip[]>({
       queryKey: [
         "trips",
@@ -146,7 +147,7 @@ export default function Trips() {
           </div>
         </div>
       </div>
-      {isCitiesPending ? (
+      {isTripsPending ? (
         <div className="flex flex-col gap-4 items-center">
           <Spinner />
           <p>Loading trips...</p>

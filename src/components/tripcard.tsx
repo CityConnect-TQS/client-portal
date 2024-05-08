@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/consistent-type-definitions */
 import { Trip } from "@/types/trip";
 import {
   Card,
@@ -15,18 +11,18 @@ import { Link } from "@tanstack/react-router";
 import { MaterialSymbol } from "react-material-symbols";
 import { useCookies } from "react-cookie";
 
-type TripCardProps = {
+interface TripCardProps {
   trip: Trip;
   isLoaded: boolean;
   clickable?: boolean;
-};
+}
 
 export default function TripCard({
   trip,
   isLoaded,
   clickable = true,
 }: TripCardProps) {
-  const [cookies] = useCookies();
+  const [cookies, setCookies] = useCookies();
 
   return isLoaded ? (
     <Link href={`/trip/reservation`}>
@@ -38,7 +34,7 @@ export default function TripCard({
         onClick={
           clickable
             ? () => {
-                cookies.set("trip", trip.id.toString());
+              setCookies("trip", trip.id.toString());
               }
             : undefined
         }
@@ -76,7 +72,7 @@ export default function TripCard({
               <p>
                 {trip.price.toLocaleString("pt-PT", {
                   style: "currency",
-                  currency: cookies.get("currency") || "EUR",
+                  currency: cookies.currency.toString() || "EUR",
                 })}
               </p>
             </div>

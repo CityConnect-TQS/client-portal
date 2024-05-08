@@ -4,7 +4,7 @@ import { City, CityCreate } from "@/types/city";
 import { BASE_API_URL } from "./config";
 
 export const createCity = async (city: CityCreate): Promise<City> =>
-  fetch(BASE_API_URL + "city", {
+  fetch(BASE_API_URL + "city/", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

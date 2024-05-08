@@ -45,7 +45,7 @@ function Index() {
             Welcome to CityConnect
           </h1>
           <h2 className="text-2xl font-semibold mb-8 text-center">
-            Your endless journeys start here. {departure}
+            Your endless journeys start here.
           </h2>
           <div className="flex flex-col items-center w-full space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4 text-center">
             <Autocomplete
