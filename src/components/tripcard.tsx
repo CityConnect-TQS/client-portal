@@ -27,6 +27,7 @@ export default function TripCard({
   return isLoaded ? (
     <Link href={`/trip/reservation`}>
       <Card
+        className="p-2"
         key={trip.id}
         id={"tripCard" + trip.id}
         isPressable={clickable && trip.freeSeats > 0}
@@ -34,31 +35,33 @@ export default function TripCard({
         onClick={
           clickable
             ? () => {
-              setCookies("trip", trip.id.toString());
+                setCookies("trip", trip.id.toString());
               }
             : undefined
         }
       >
-        <CardHeader className="flex flex-col justify-start items-start">
-          <p className="text-lg font-bold">
-            {trip.departureTime.toLocaleString("en-US", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-              hour: "numeric",
-              minute: "numeric",
-            })}
-          </p>
-          <p className="text-small text-default-500">
-            Arrival at{" "}
-            {trip.arrivalTime.toLocaleString("en-US", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-              hour: "numeric",
-              minute: "numeric",
-            })}
-          </p>
+        <CardHeader className="flex flex-col justify-start items-start space-x-80">
+          <div className="flex justify-between space-x-4 self-center">
+            <p className="text-lg font-bold">
+              {trip.departureTime.toLocaleString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+                hour: "numeric",
+                minute: "numeric",
+              })}
+            </p>
+            <p className="text-small text-default-500">
+              Arrival at{" "}
+              {trip.arrivalTime.toLocaleString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+                hour: "numeric",
+                minute: "numeric",
+              })}
+            </p>
+          </div>
         </CardHeader>
         <Divider />
         <CardBody>
@@ -72,7 +75,7 @@ export default function TripCard({
               <p>
                 {trip.price.toLocaleString("pt-PT", {
                   style: "currency",
-                  currency: cookies.currency || "EUR",
+                  currency: (cookies.currency as string) || "EUR",
                 })}
               </p>
             </div>

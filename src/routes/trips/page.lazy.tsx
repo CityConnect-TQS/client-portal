@@ -22,15 +22,6 @@ interface tripInfo {
   departureTime: string;
 }
 
-interface trip {
-  id: number;
-  departure: number;
-  arrival: number;
-  departureTime: string;
-  price: number;
-  currency: string;
-}
-
 export const Route = createFileRoute("/trips/page")({
   validateSearch: (search: Record<string, unknown>): tripInfo => {
     return {
@@ -49,13 +40,17 @@ export default function Trips() {
 
   const { departure, arrival, departureTime } = Route.useSearch();
 
+  const [, setDepartureTime] = useState<string>(
+    new Date().toISOString().substring(0, 10)
+  );
+
   const { isPending: isCitiesPending, data: cities } =
     useQuery<City[]>({
       queryKey: ["cities"],
       queryFn: () => getCities(),
     }) || [];
 
-    const { isPending: isTripsPending, data: trips } =
+  const { isPending: isTripsPending, data: trips } =
     useQuery<Trip[]>({
       queryKey: [
         "trips",
@@ -138,6 +133,7 @@ export default function Trips() {
               label="Date"
               id="departureTimeInput"
               className="max-w-xs"
+              onChange={(event) => setDepartureTime(event.target.value)}
               defaultValue={
                 departureTime
                   ? new Date(departureTime).toISOString().split("T")[0]
@@ -153,10 +149,12 @@ export default function Trips() {
           <p>Loading trips...</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 px-4 md:px-8 lg:px-16 gap-8">
-          {trips?.map((trip) => (
-            <TripCard key={trip.id} isLoaded={!isTripsPending} trip={trip} />
-          ))}
+        <div className="flex justify-around">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 lg:gap-x-32 lg:gap-y-24 md:px-8 gap-12">
+            {trips?.map((trip) => (
+              <TripCard key={trip.id} isLoaded={!isTripsPending} trip={trip} />
+            ))}
+          </div>
         </div>
       )}
     </div>
