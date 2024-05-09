@@ -118,7 +118,7 @@ function Index() {
                         setCookie("departureTime", departureTime);
                       }
                     : () => {
-                      //popup error
+                      //popup error maybe idk if its necessary
                       }
                 }
               >

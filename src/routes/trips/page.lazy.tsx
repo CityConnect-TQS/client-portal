@@ -205,34 +205,26 @@ export default function Trips() {
         ) : (
           <div className="flex justify-around pb-16 pt-16">
             <div className="grid px-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-2 lg:gap-y-16 md:px-8 gap-12">
-              {trips?.filter(
-                (trip) =>
-                  new Date(trip.departureTime)
-                    .toISOString()
-                    .substring(0, 10) === departureTime
-              )?.length ?? 0 > 0 ? (
-                trips
-                  ?.filter(
-                    (trip) =>
-                      new Date(trip.departureTime)
-                        .toISOString()
-                        .substring(0, 10) === departureTime
-                  )
-                  .map((trip) => (
-                    <TripCard
-                      key={trip.id}
-                      isLoaded={!isTripsPending}
-                      trip={trip}
-                    />
-                  ))
-              ) : (
-                <div className="col-span-2">
-                  <h1 className="text-3xl font-bold mb-4 text-center">
-                    No trips available for this date
-                  </h1>
-                </div>
-              )}
+              {trips
+                ?.filter(
+                  (trip) =>
+                    new Date(trip.departureTime)
+                      .toISOString()
+                      .substring(0, 10) === departureTime
+                )
+                .map((trip) => (
+                  <TripCard
+                    key={trip.id}
+                    isLoaded={!isTripsPending}
+                    trip={trip}
+                  />
+                ))}
             </div>
+            {(trips ?? []).length === 0 && (
+              <h1 className="text-3xl font-bold pt-32 text-center items-center">
+                No trips available for this date
+              </h1>
+            )}
           </div>
         )}
       </div>

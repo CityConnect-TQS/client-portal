@@ -67,7 +67,7 @@ export default function TripCard({
         <CardBody>
           <div className="grid grid-cols-2">
             <div className="flex flex-row gap-2 items-center">
-              <MaterialSymbol icon="flight_takeoff" size={20} />
+              <MaterialSymbol icon="near_me" size={20} />
               <p>{trip.departure.name}</p>
             </div>
             <div className="flex flex-row gap-2 items-center">
@@ -80,7 +80,7 @@ export default function TripCard({
               </p>
             </div>
             <div className="flex flex-row gap-2 items-center">
-              <MaterialSymbol icon="flight_land" size={20} />
+              <MaterialSymbol icon="pin_drop" size={20} />
               <p>{trip.arrival.name}</p>
             </div>
             <div className="flex flex-row gap-2 items-center">
