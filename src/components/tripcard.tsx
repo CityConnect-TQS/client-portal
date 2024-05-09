@@ -36,7 +36,7 @@ export default function TripCard({
           onClick={
             clickable
               ? () => {
-                  setCookies("trip", trip.id.toString());
+                  setCookies("trip", trip.id.toString(), { path: "/" });
                 }
               : undefined
           }
