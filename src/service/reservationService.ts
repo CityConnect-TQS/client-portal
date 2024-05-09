@@ -17,7 +17,7 @@ export const createReservation = async (
       },
       body: JSON.stringify(reservation),
     }
-  ).then((res) => res.json());
+  ).then((res) => res.json() as Promise<Reservation>);
 
 export const getReservations = async (
   params?: CurrencyParams
@@ -31,7 +31,7 @@ export const getReservations = async (
         "Content-Type": "application/json",
       },
     }
-  ).then((res) => res.json());
+  ).then((res) => res.json() as Promise<Reservation[]>);
 
 export const getReservation = async (
   id: number,
@@ -48,7 +48,7 @@ export const getReservation = async (
         "Content-Type": "application/json",
       },
     }
-  ).then((res) => res.json());
+  ).then((res) => res.json() as Promise<Reservation>);
 
 export const deleteReservation = async (id: number): Promise<boolean> =>
   fetch(BASE_API_URL + "reservation/" + id, {
@@ -56,4 +56,4 @@ export const deleteReservation = async (id: number): Promise<boolean> =>
     headers: {
       "Content-Type": "application/json",
     },
-  });
+  }).then((res) => res.status === 200);

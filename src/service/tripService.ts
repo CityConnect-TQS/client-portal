@@ -15,7 +15,7 @@ export const getTrips = async (
       },
     }
   );
-  const data = await res.json();
+  const data = (await res.json()) as Trip[];
   data.forEach((trip: Trip) => {
     trip.departureTime = new Date(trip.departureTime);
     trip.arrivalTime = new Date(trip.arrivalTime);
@@ -39,7 +39,7 @@ export const getTrip = async (
       },
     }
   );
-  const data = await res.json();
+  const data = (await res.json()) as Trip;
   data.departureTime = new Date(data.departureTime);
   data.arrivalTime = new Date(data.arrivalTime);
   return data;

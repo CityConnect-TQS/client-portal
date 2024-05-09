@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
+import { Bus } from "@/types/bus";
 import { BASE_API_URL } from "./config";
 
 export const getBuses = async (): Promise<Bus[]> =>
@@ -7,13 +6,13 @@ export const getBuses = async (): Promise<Bus[]> =>
     headers: {
       "Content-Type": "application/json",
     },
-  }).then((res) => res.json());
+  }).then((res) => res.json() as Promise<Bus[]>);
 
 export const getBus = async (id: number): Promise<Bus> =>
   fetch(BASE_API_URL + "bus/" + id, {
     headers: {
       "Content-Type": "application/json",
     },
-  }).then((res) => res.json());
+  }).then((res) => res.json() as Promise<Bus>);
 
   
