@@ -17,14 +17,14 @@ import TripCard from "@/components/tripcard";
 import { Currency } from "@/types/currency";
 import { Trip } from "@/types/trip";
 
-interface tripInfo {
+interface TripInfo {
   departure: number;
   arrival: number;
   departureTime: string;
 }
 
 export const Route = createFileRoute("/trips/page")({
-  validateSearch: (search: Record<string, unknown>): tripInfo => {
+  validateSearch: (search: Record<string, unknown>): TripInfo => {
     return {
       departure: search.departure as number,
       arrival: search.arrival as number,
@@ -170,7 +170,6 @@ export default function Trips() {
                 setDepartureTime(value.toString());
                 setArrival(arrival);
                 setDeparture(departure);
-                setSeatsValue(seatsValue);
               }}
               defaultValue={
                 departureTime
