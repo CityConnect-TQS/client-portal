@@ -16,6 +16,7 @@ import { getTrips } from "@/service/tripService";
 import TripCard from "@/components/tripcard";
 import { Currency } from "@/types/currency";
 import { Trip } from "@/types/trip";
+import { useCookies } from "react-cookie";
 
 interface TripInfo {
   departure: number;
@@ -46,11 +47,10 @@ const updateParameters = () => {
 
 export default function Trips() {
   const [seatsValue, setSeatsValue] = useState<number>(1);
-  const currency: Currency = "EUR";
   const seats = seatsValue;
-
   const { departure, arrival, departureTime } = Route.useSearch();
-
+  const [cookies] = useCookies();
+  const currency = (cookies.currency as Currency) ?? "EUR";
   const [state, setState] = useState({
     arrival: 0,
     departure: 0,
@@ -82,7 +82,6 @@ export default function Trips() {
           departure,
           seats,
           departureTime: departureTime.substring(0, 10) + "T00:00:00",
-          currency,
         }),
     }) || [];
 

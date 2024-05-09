@@ -6,12 +6,18 @@ import {
   NavbarMenuToggle,
   Link,
   Button,
+  Select,
+  SelectItem,
 } from "@nextui-org/react";
 import { useState } from "react";
 import { ThemeSwitcher } from "./themeSwitcher";
+import { Currency, currencyCodes } from "@/types/currency";
+import { useCookies } from "react-cookie";
 
 export function NavbarClient() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [cookies, setCookies] = useCookies();
+  const currency = (cookies.currency as Currency) ?? "EUR";
 
   return (
     <Navbar onMenuOpenChange={setIsMenuOpen}>
@@ -38,7 +44,7 @@ export function NavbarClient() {
       ></NavbarContent>
       <NavbarContent justify="end">
         <ThemeSwitcher />
-        <NavbarItem className="hidden lg:flex ">
+        <NavbarItem className="hidden lg:flex">
           <Link href="#" className="text-primary">
             Login
           </Link>
@@ -47,6 +53,23 @@ export function NavbarClient() {
           <Button as={Link} href="#" variant="flat">
             Sign Up
           </Button>
+        </NavbarItem>
+        <NavbarItem className="w-28">
+          <Select
+            label="Currency"
+            placeholder="Select a currency"
+            defaultSelectedKeys={[currency]}
+            className="max-w-xs"
+            onChange={(value) => {
+              setCookies("currency", value);
+            }}
+          >
+            {currencyCodes.map((code) => (
+              <SelectItem key={code} value={code}>
+                {code}
+              </SelectItem>
+            ))}
+          </Select>
         </NavbarItem>
       </NavbarContent>
     </Navbar>

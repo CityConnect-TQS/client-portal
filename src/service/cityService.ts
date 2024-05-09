@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { City, CityCreate } from "@/types/city";
 import { BASE_API_URL } from "./config";
 

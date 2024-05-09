@@ -24,18 +24,34 @@ function Index() {
     new Date().toISOString().substring(0, 10)
   );
   const [searchEnabled, setSearchEnabled] = useState<boolean>(false);
-
+  const isFormValid = () => {
+    return departure !== 0 && arrival !== 0 && departureTime !== "";
+  };
+  const handleDepartureChange = (value: { toString: () => string; }) => {
+    const departureId = value ? parseInt(value.toString()) : 0;
+    setDeparture(departureId);
+  };
+  const handleArrivalChange = (value: { toString: () => string; }) => {
+    const arrivalId = value ? parseInt(value.toString()) : 0;
+    setArrival(arrivalId);
+  };
+  const handleSearch = () => {
+    if (searchEnabled) {
+      setCookie("departure", departure.toString());
+      setCookie("arrival", arrival.toString());
+      setCookie("departureTime", departureTime);
+      setCookie("currency", "EUR");
+    } else {
+      alert("Please select a departure and arrival city.");
+    }
+  };
   const { data: cities } = useQuery<City[]>({
     queryKey: ["cities"],
     queryFn: () => getCities(),
   });
 
   useEffect(() => {
-    if (departure !== 0 && arrival !== 0) {
-      setSearchEnabled(true);
-    } else {
-      setSearchEnabled(false);
-    }
+    setSearchEnabled(departure !== 0 && arrival !== 0);
   }, [departure, arrival]);
 
   return (
@@ -54,9 +70,7 @@ function Index() {
               label="From"
               id="origin"
               className="max-w-xs"
-              onSelectionChange={(value) => {
-                setDeparture(value ? parseInt(value.toString()) : 0);
-              }}
+              onSelectionChange={handleDepartureChange}
             >
               {cities
                 ? cities.map((city: City) => (
@@ -74,9 +88,7 @@ function Index() {
               label="To"
               id="destination"
               className="max-w-xs"
-              onSelectionChange={(value) => {
-                setArrival(value ? parseInt(value.toString()) : 0);
-              }}
+              onSelectionChange={handleArrivalChange}
             >
               {cities
                 ? cities.map((city) => (
@@ -98,29 +110,23 @@ function Index() {
               onChange={(date) => setDepartureTime(date.toString())}
             />
             <Link
-              to="/trips/page"
-              search={{
-                departure: departure,
-                arrival: arrival,
-                departureTime: departureTime,
-              }}
+              to={searchEnabled ? "/trips/page" : ""}
+              search={
+                searchEnabled
+                  ? {
+                      departure: departure,
+                      arrival: arrival,
+                      departureTime: departureTime,
+                    }
+                  : {}
+              }
             >
               <Button
                 color="primary"
                 size="lg"
                 className="h-14"
-                isDisabled={!searchEnabled}
-                onClick={
-                  searchEnabled
-                    ? () => {
-                        setCookie("departure", departure.toString());
-                        setCookie("arrival", arrival.toString());
-                        setCookie("departureTime", departureTime);
-                      }
-                    : () => {
-                      //popup error maybe idk if its necessary
-                      }
-                }
+                isDisabled={!isFormValid()}
+                onClick={handleSearch}
               >
                 Search
               </Button>
