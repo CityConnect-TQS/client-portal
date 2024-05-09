@@ -50,27 +50,7 @@ export const getReservation = async (
     }
   ).then((res) => res.json());
 
-export const updateReservation = async (
-  id: number,
-  reservation: ReservationCreate,
-  params?: CurrencyParams
-): Promise<Reservation> =>
-  fetch(
-    BASE_API_URL +
-      "reservation/" +
-      id +
-      "?" +
-      new URLSearchParams(params as Record<string, string>),
-    {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(reservation),
-    }
-  ).then((res) => res.json());
-
-export const deleteReservation = async (id: number): Promise<Response> =>
+export const deleteReservation = async (id: number): Promise<boolean> =>
   fetch(BASE_API_URL + "reservation/" + id, {
     method: "DELETE",
     headers: {
