@@ -10,12 +10,14 @@ import { NavbarClient } from "@/components/navbar";
 import { useQuery } from "@tanstack/react-query";
 import { City } from "@/types/city";
 import { getCities } from "@/service/cityService";
+import { useCookies } from "react-cookie";
 
 export const Route = createLazyFileRoute("/")({
   component: Index,
 });
 
 function Index() {
+  const [, setCookie] = useCookies();
   const [departure, setDeparture] = useState<number>(0);
   const [arrival, setArrival] = useState<number>(0);
   const [departureTime, setDepartureTime] = useState<string>(
@@ -108,6 +110,17 @@ function Index() {
                 size="lg"
                 className="h-14"
                 isDisabled={!searchEnabled}
+                onClick={
+                  searchEnabled
+                    ? () => {
+                        setCookie("departure", departure.toString());
+                        setCookie("arrival", arrival.toString());
+                        setCookie("departureTime", departureTime);
+                      }
+                    : () => {
+                      //popup error
+                      }
+                }
               >
                 Search
               </Button>

@@ -78,10 +78,10 @@ export default function Trips() {
       ],
       queryFn: () =>
         getTrips({
-          departure,
           arrival,
+          departure,
           seats,
-          departureTime: departureTime + "T00:00:00",
+          departureTime: departureTime.substring(0, 10) + "T00:00:00",
           currency,
         }),
     }) || [];
@@ -189,7 +189,7 @@ export default function Trips() {
               <Button
                 color="primary"
                 size="lg"
-                className="h-14"
+                className="h-14 w-full"
                 onClick={updateParameters}
               >
                 Search
@@ -197,21 +197,45 @@ export default function Trips() {
             </Link>
           </div>
         </div>
-      </div>
-      {isTripsPending ? (
-        <div className="flex flex-col gap-4 items-center">
-          <Spinner />
-          <p>Loading trips...</p>
-        </div>
-      ) : (
-        <div className="flex justify-around">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 lg:gap-x-32 lg:gap-y-24 md:px-8 gap-12">
-            {trips?.map((trip) => (
-              <TripCard key={trip.id} isLoaded={!isTripsPending} trip={trip} />
-            ))}
+        {isTripsPending ? (
+          <div className="flex flex-col gap-4 items-center pt-16">
+            <Spinner />
+            <p>Loading trips...</p>
           </div>
-        </div>
-      )}
+        ) : (
+          <div className="flex justify-around pb-16 pt-16">
+            <div className="grid px-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-2 lg:gap-y-16 md:px-8 gap-12">
+              {trips?.filter(
+                (trip) =>
+                  new Date(trip.departureTime)
+                    .toISOString()
+                    .substring(0, 10) === departureTime
+              )?.length ?? 0 > 0 ? (
+                trips
+                  ?.filter(
+                    (trip) =>
+                      new Date(trip.departureTime)
+                        .toISOString()
+                        .substring(0, 10) === departureTime
+                  )
+                  .map((trip) => (
+                    <TripCard
+                      key={trip.id}
+                      isLoaded={!isTripsPending}
+                      trip={trip}
+                    />
+                  ))
+              ) : (
+                <div className="col-span-2">
+                  <h1 className="text-3xl font-bold mb-4 text-center">
+                    No trips available for this date
+                  </h1>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
