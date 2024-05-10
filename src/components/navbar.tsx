@@ -56,13 +56,10 @@ export function NavbarClient() {
         <NavbarItem>
           <Button variant="flat">Sign Up</Button>
         </NavbarItem>
-        <NavbarItem className="w-28">
           <Select
-            label="Currency"
-            size="sm"
             placeholder="Select a currency"
             defaultSelectedKeys={[currency]}
-            className="max-w-xs"
+            className="w-24"
             onChange={(event) => {
               setCookies("currency", event.target.value, { path: "/" });
             }}
