@@ -7,7 +7,6 @@ import {
   Divider,
   Skeleton,
 } from "@nextui-org/react";
-import { Link } from "@tanstack/react-router";
 import { MaterialSymbol } from "react-material-symbols";
 import { useCookies } from "react-cookie";
 
