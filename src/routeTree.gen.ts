@@ -17,6 +17,7 @@ import { Route as rootRoute } from './routes/__root'
 // Create Virtual Routes
 
 const IndexLazyImport = createFileRoute('/')()
+const TripsIndexLazyImport = createFileRoute('/trips/')()
 const ReservationIndexLazyImport = createFileRoute('/reservation/')()
 const ReservationSuccessLazyImport = createFileRoute('/reservation/success')()
 
@@ -27,17 +28,17 @@ const IndexLazyRoute = IndexLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
 
+const TripsIndexLazyRoute = TripsIndexLazyImport.update({
+  path: '/trips/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/trips/index.lazy').then((d) => d.Route))
+
 const ReservationIndexLazyRoute = ReservationIndexLazyImport.update({
   path: '/reservation/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() =>
   import('./routes/reservation/index.lazy').then((d) => d.Route),
 )
-
-const TripsPageLazyRoute = TripsPageLazyImport.update({
-  path: '/trips/page',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/trips/page.lazy').then((d) => d.Route))
 
 const ReservationSuccessLazyRoute = ReservationSuccessLazyImport.update({
   path: '/reservation/success',
@@ -58,12 +59,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReservationSuccessLazyImport
       parentRoute: typeof rootRoute
     }
-    '/trips/page': {
-      preLoaderRoute: typeof TripsPageLazyImport
-      parentRoute: typeof rootRoute
-    }
     '/reservation/': {
       preLoaderRoute: typeof ReservationIndexLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/trips/': {
+      preLoaderRoute: typeof TripsIndexLazyImport
       parentRoute: typeof rootRoute
     }
   }
@@ -75,6 +76,7 @@ export const routeTree = rootRoute.addChildren([
   IndexLazyRoute,
   ReservationSuccessLazyRoute,
   ReservationIndexLazyRoute,
+  TripsIndexLazyRoute,
 ])
 
 /* prettier-ignore-end */

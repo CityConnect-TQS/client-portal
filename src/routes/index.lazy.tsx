@@ -27,11 +27,11 @@ function Index() {
   const isFormValid = () => {
     return departure !== 0 && arrival !== 0 && departureTime !== "";
   };
-  const handleDepartureChange = (value: { toString: () => string; }) => {
+  const handleDepartureChange = (value: { toString: () => string }) => {
     const departureId = value ? parseInt(value.toString()) : 0;
     setDeparture(departureId);
   };
-  const handleArrivalChange = (value: { toString: () => string; }) => {
+  const handleArrivalChange = (value: { toString: () => string }) => {
     const arrivalId = value ? parseInt(value.toString()) : 0;
     setArrival(arrivalId);
   };
@@ -110,7 +110,7 @@ function Index() {
               onChange={(date) => setDepartureTime(date.toString())}
             />
             <Link
-              to={searchEnabled ? "/trips/page" : ""}
+              to={searchEnabled ? "/trips" : ""}
               search={
                 searchEnabled
                   ? {

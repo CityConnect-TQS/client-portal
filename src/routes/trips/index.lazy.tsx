@@ -24,7 +24,7 @@ interface TripInfo {
   departureTime: string;
 }
 
-export const Route = createFileRoute("/trips/page")({
+export const Route = createFileRoute("/trips/")({
   validateSearch: (search: Record<string, unknown>): TripInfo => {
     return {
       departure: search.departure as number,
@@ -60,7 +60,7 @@ export default function Trips() {
       stateTemp.departureTime = new Date().toISOString().split("T")[0];
     }
 
-    void navigate({ to: "/trips/page", search: stateTemp, replace: true });
+    void navigate({ to: "/trips", search: stateTemp, replace: true });
   }
 
   const [cookies] = useCookies();
