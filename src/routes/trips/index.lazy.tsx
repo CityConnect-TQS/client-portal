@@ -10,7 +10,7 @@ import { City } from "@/types/city";
 import { useQuery } from "@tanstack/react-query";
 import { getCities } from "@/service/cityService";
 import { useState } from "react";
-import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { NavbarClient } from "@/components/navbar";
 import { getTrips } from "@/service/tripService";
 import TripCard from "@/components/tripcard";
@@ -24,7 +24,7 @@ interface TripInfo {
   departureTime: string;
 }
 
-export const Route = createFileRoute("/trips/page")({
+export const Route = createFileRoute("/trips/")({
   validateSearch: (search: Record<string, unknown>): TripInfo => {
     return {
       departure: search.departure as number,
@@ -60,10 +60,10 @@ export default function Trips() {
       stateTemp.departureTime = new Date().toISOString().split("T")[0];
     }
 
-    void navigate({ to: "/trips/page", search: stateTemp, replace: true });
+    void navigate({ search: stateTemp, replace: true });
   }
 
-  const [cookies] = useCookies();
+  const [cookies, setCookies] = useCookies(["currency", "trip"]);
   const currency = (cookies.currency as Currency) ?? "EUR";
   const [seats, setSeats] = useState<number>(1);
   const [state, setState] = useState({
@@ -73,10 +73,7 @@ export default function Trips() {
   });
 
   const updateParameters = () => {
-    const queryString = new URLSearchParams(
-      state as unknown as Record<string, string>
-    ).toString();
-    void navigate({ search: queryString });
+    void navigate({ search: state, replace: true });
   };
 
   const setArrival = (value: number) =>
@@ -198,16 +195,14 @@ export default function Trips() {
                   : undefined
               }
             />
-            <Link search={state}>
-              <Button
-                color="primary"
-                size="lg"
-                className="h-14 w-full"
-                onClick={updateParameters}
-              >
-                Search
-              </Button>
-            </Link>
+            <Button
+              color="primary"
+              size="lg"
+              className="h-14 w-full"
+              onClick={updateParameters}
+            >
+              Search
+            </Button>
           </div>
         </div>
         {isTripsPending ? (
@@ -220,13 +215,17 @@ export default function Trips() {
             {trips?.length !== 0 ? (
               <div className="grid px-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-2 lg:gap-y-16 md:px-8 gap-12">
                 {trips?.map((trip) => (
-                  <Link
+                  <TripCard
                     key={trip.id}
-                    to={`/reservation`}
-                    className="overflow-visible"
-                  >
-                    <TripCard isLoaded={!isTripsPending} trip={trip} />
-                  </Link>
+                    isLoaded={!isTripsPending}
+                    trip={trip}
+                    onClick={() => {
+                      setCookies("trip", trip.id.toString(), { path: "/" });
+                      void navigate({
+                        to: "/reservation",
+                      });
+                    }}
+                  />
                 ))}
               </div>
             ) : (
