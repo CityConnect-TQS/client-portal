@@ -11,7 +11,7 @@ export default function SeatButton({ row, seat, setLayout }: SeatProps) {
   return (
     <Button
       key={seat.id}
-      variant={seat.isAlreadyReserved ? "flat" : "solid"}
+      variant={"flat"}
       color={
         seat.isEnabled
           ? "primary"
