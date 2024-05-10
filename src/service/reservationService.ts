@@ -17,7 +17,7 @@ export const createReservation = async (
       },
       body: JSON.stringify(reservation),
     }
-  ).then((res) => res.json());
+  ).then((res) => res.json() as Promise<Reservation>);
 
 export const getReservations = async (
   params?: CurrencyParams
@@ -31,13 +31,13 @@ export const getReservations = async (
         "Content-Type": "application/json",
       },
     }
-  ).then((res) => res.json());
+  ).then((res) => res.json() as Promise<Reservation[]>);
 
 export const getReservation = async (
   id: number,
   params?: CurrencyParams
-): Promise<Reservation> =>
-  fetch(
+): Promise<Reservation> => {
+  const res = await fetch(
     BASE_API_URL +
       "reservation/" +
       id +
@@ -48,32 +48,19 @@ export const getReservation = async (
         "Content-Type": "application/json",
       },
     }
-  ).then((res) => res.json());
+  );
 
-export const updateReservation = async (
-  id: number,
-  reservation: ReservationCreate,
-  params?: CurrencyParams
-): Promise<Reservation> =>
-  fetch(
-    BASE_API_URL +
-      "reservation/" +
-      id +
-      "?" +
-      new URLSearchParams(params as Record<string, string>),
-    {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(reservation),
-    }
-  ).then((res) => res.json());
+  const data = (await res.json()) as Reservation;
+  data.trip.departureTime = new Date(data.trip.departureTime);
+  data.trip.arrivalTime = new Date(data.trip.arrivalTime);
 
-export const deleteReservation = async (id: number): Promise<Response> =>
+  return data;
+};
+
+export const deleteReservation = async (id: number): Promise<boolean> =>
   fetch(BASE_API_URL + "reservation/" + id, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
     },
-  });
+  }).then((res) => res.status === 200);

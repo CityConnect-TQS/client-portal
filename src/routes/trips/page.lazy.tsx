@@ -10,7 +10,7 @@ import { City } from "@/types/city";
 import { useQuery } from "@tanstack/react-query";
 import { getCities } from "@/service/cityService";
 import { useState } from "react";
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { NavbarClient } from "@/components/navbar";
 import { getTrips } from "@/service/tripService";
 import TripCard from "@/components/tripcard";
@@ -35,27 +35,49 @@ export const Route = createFileRoute("/trips/page")({
   component: Trips,
 });
 
-const updateParameters = () => {
-  const queryParams = {
-    departure: state.departure,
-    arrival: state.arrival,
-    departureTime: state.departureTime,
-  };
-  const queryString = new URLSearchParams(queryParams).toString();
-  window.history.pushState({}, "", `/trips/page?${queryString}`);
-};
-
 export default function Trips() {
-  const [seatsValue, setSeatsValue] = useState<number>(1);
-  const seats = seatsValue;
+  const navigate = useNavigate();
   const { departure, arrival, departureTime } = Route.useSearch();
+  const areParametersValid =
+    departure !== undefined &&
+    arrival !== undefined &&
+    departureTime !== undefined;
+
+  if (!areParametersValid) {
+    const stateTemp = {
+      arrival: arrival,
+      departure: departure,
+      departureTime: departureTime,
+    };
+
+    if (departure === undefined) {
+      stateTemp.departure = 1;
+    }
+    if (arrival === undefined) {
+      stateTemp.arrival = 2;
+    }
+    if (departureTime === undefined) {
+      stateTemp.departureTime = new Date().toISOString().split("T")[0];
+    }
+
+    void navigate({ to: "/trips/page", search: stateTemp, replace: true });
+  }
+
   const [cookies] = useCookies();
   const currency = (cookies.currency as Currency) ?? "EUR";
+  const [seats, setSeats] = useState<number>(1);
   const [state, setState] = useState({
-    arrival: 0,
-    departure: 0,
-    departureTime: new Date().toISOString().substring(0, 10),
+    arrival: arrival,
+    departure: departure,
+    departureTime: departureTime,
   });
+
+  const updateParameters = () => {
+    const queryString = new URLSearchParams(
+      state as unknown as Record<string, string>
+    ).toString();
+    void navigate({ search: queryString });
+  };
 
   const setArrival = (value: number) =>
     setState((prevState) => ({ ...prevState, arrival: value }));
@@ -152,9 +174,9 @@ export default function Trips() {
               id="seatsInput"
               min={1}
               className="w-full lg:max-w-24"
-              defaultValue={seatsValue.toString()}
+              defaultValue={seats.toString()}
               onValueChange={(value) => {
-                setSeatsValue(value ? parseInt(value.toString()) : 0);
+                setSeats(value ? parseInt(value.toString()) : 0);
                 setArrival(arrival);
                 setDeparture(departure);
                 setDepartureTime(departureTime);
@@ -176,14 +198,7 @@ export default function Trips() {
                   : undefined
               }
             />
-            <Link
-              to="/trips/page"
-              search={{
-                departure: state.departure,
-                arrival: state.arrival,
-                departureTime: state.departureTime,
-              }}
-            >
+            <Link search={state}>
               <Button
                 color="primary"
                 size="lg"
@@ -202,23 +217,19 @@ export default function Trips() {
           </div>
         ) : (
           <div className="flex justify-around pb-16 pt-16">
-            <div className="grid px-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-2 lg:gap-y-16 md:px-8 gap-12">
-              {trips
-                ?.filter(
-                  (trip) =>
-                    new Date(trip.departureTime)
-                      .toISOString()
-                      .substring(0, 10) === departureTime
-                )
-                .map((trip) => (
-                  <TripCard
+            {trips?.length !== 0 ? (
+              <div className="grid px-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-2 lg:gap-y-16 md:px-8 gap-12">
+                {trips?.map((trip) => (
+                  <Link
                     key={trip.id}
-                    isLoaded={!isTripsPending}
-                    trip={trip}
-                  />
+                    to={`/reservation`}
+                    className="overflow-visible"
+                  >
+                    <TripCard isLoaded={!isTripsPending} trip={trip} />
+                  </Link>
                 ))}
-            </div>
-            {(trips ?? []).length === 0 && (
+              </div>
+            ) : (
               <h1 className="text-3xl font-bold pt-32 text-center items-center">
                 No trips available for this date
               </h1>
