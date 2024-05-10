@@ -26,7 +26,7 @@ export default function TripCard({
 
   return (
     <Skeleton isLoaded={isLoaded} className="rounded-lg">
-      <Link href={`/trip/reservation`}>
+      <Link href={`/reservation`}>
         <Card
           className="p-2"
           key={trip.id}
@@ -42,7 +42,7 @@ export default function TripCard({
           }
         >
           <CardHeader className="flex flex-col justify-start items-start space-x-80">
-            <div className="flex justify-between space-x-4 self-center">
+            <div className="flex justify-between space-x-4 self-center items-center">
               <p className="text-lg font-bold">
                 {trip.departureTime.toLocaleString("en-US", {
                   year: "numeric",
