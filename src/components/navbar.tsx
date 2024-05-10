@@ -1,10 +1,15 @@
 import {
+  Avatar,
+  Button,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
   Navbar,
   NavbarBrand,
   NavbarContent,
   NavbarItem,
   NavbarMenuToggle,
-  Button,
   Select,
   SelectItem,
 } from "@nextui-org/react";
@@ -14,6 +19,7 @@ import { Currency, currencyCodes } from "@/types/currency";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "@tanstack/react-router";
 import { User } from "@/types/user.ts";
+import { MaterialSymbol } from "react-material-symbols";
 
 export function NavbarClient() {
   const navigate = useNavigate();
@@ -53,11 +59,9 @@ export function NavbarClient() {
         className="hidden sm:flex gap-4"
         justify="center"
       ></NavbarContent>
+
       <NavbarContent justify="end">
         <ThemeSwitcher />
-        <NavbarItem className="hidden lg:flex">
-          <Button variant="light">Login</Button>
-        </NavbarItem>
         <NavbarItem>
           <Select
             placeholder="Select a currency"
@@ -73,6 +77,43 @@ export function NavbarClient() {
               </SelectItem>
             ))}
           </Select>
+        </NavbarItem>
+
+        <NavbarItem>
+          <Dropdown placement="bottom-end">
+            <DropdownTrigger>
+              <Avatar
+                as="button"
+                className="transition-transform"
+                color={user ? "primary" : "default"}
+                fallback={
+                  <MaterialSymbol
+                    icon={"account_circle_off"}
+                    size={24}
+                    className={"text-default-500"}
+                  />
+                }
+                name={user?.name}
+              />
+            </DropdownTrigger>
+            <DropdownMenu aria-label="Profile Actions" variant="flat">
+              <DropdownItem key="profile" className="h-14 gap-2">
+                <p className="font-semibold">Signed in as</p>
+                <p className="font-semibold">zoey@example.com</p>
+              </DropdownItem>
+              <DropdownItem key="settings">My Settings</DropdownItem>
+              <DropdownItem key="team_settings">Team Settings</DropdownItem>
+              <DropdownItem key="analytics">Analytics</DropdownItem>
+              <DropdownItem key="system">System</DropdownItem>
+              <DropdownItem key="configurations">Configurations</DropdownItem>
+              <DropdownItem key="help_and_feedback">
+                Help & Feedback
+              </DropdownItem>
+              <DropdownItem key="logout" color="danger">
+                Log Out
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
         </NavbarItem>
       </NavbarContent>
     </Navbar>
