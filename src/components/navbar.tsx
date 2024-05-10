@@ -57,6 +57,7 @@ export function NavbarClient() {
         <NavbarItem className="w-28">
           <Select
             label="Currency"
+            size="sm"
             placeholder="Select a currency"
             defaultSelectedKeys={[currency]}
             className="max-w-xs"
