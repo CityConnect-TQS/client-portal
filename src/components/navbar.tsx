@@ -16,7 +16,7 @@ import { useCookies } from "react-cookie";
 
 export function NavbarClient() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [cookies, setCookies] = useCookies();
+  const [cookies, setCookies] = useCookies(["currency"]);
   const currency = (cookies.currency as Currency) ?? "EUR";
 
   return (
@@ -60,8 +60,8 @@ export function NavbarClient() {
             placeholder="Select a currency"
             defaultSelectedKeys={[currency]}
             className="max-w-xs"
-            onChange={(value) => {
-              setCookies("currency", value);
+            onChange={(event) => {
+              setCookies("currency", event.target.value, { path: "/" });
             }}
           >
             {currencyCodes.map((code) => (
