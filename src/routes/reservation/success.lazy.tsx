@@ -34,7 +34,7 @@ function Success() {
 
         {!isPending && (
           <TripCard
-            trip={reservation?.trip}
+            trip={reservation!.trip}
             isLoaded={!isPending}
             clickable={true}
           />
