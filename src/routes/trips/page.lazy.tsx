@@ -47,15 +47,17 @@ const updateParameters = () => {
 
 export default function Trips() {
   const [seatsValue, setSeatsValue] = useState<number>(1);
-  const seats = seatsValue;
+
   const { departure, arrival, departureTime } = Route.useSearch();
   const [cookies] = useCookies();
   const currency = (cookies.currency as Currency) ?? "EUR";
+  const [seats, setSeats] = useState<number>(1);
   const [state, setState] = useState({
-    arrival: 0,
-    departure: 0,
-    departureTime: new Date().toISOString().substring(0, 10),
+    arrival: arrival,
+    departure: departure,
+    departureTime: departureTime,
   });
+
 
   const setArrival = (value: number) =>
     setState((prevState) => ({ ...prevState, arrival: value }));
@@ -152,9 +154,9 @@ export default function Trips() {
               id="seatsInput"
               min={1}
               className="w-full lg:max-w-24"
-              defaultValue={seatsValue.toString()}
+              defaultValue={seats.toString()}
               onValueChange={(value) => {
-                setSeatsValue(value ? parseInt(value.toString()) : 0);
+                setSeats(value ? parseInt(value.toString()) : 0);
                 setArrival(arrival);
                 setDeparture(departure);
                 setDepartureTime(departureTime);
@@ -176,14 +178,7 @@ export default function Trips() {
                   : undefined
               }
             />
-            <Link
-              to="/trips/page"
-              search={{
-                departure: state.departure,
-                arrival: state.arrival,
-                departureTime: state.departureTime,
-              }}
-            >
+            <Link search={state}>
               <Button
                 color="primary"
                 size="lg"
