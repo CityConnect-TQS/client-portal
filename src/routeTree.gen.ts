@@ -18,7 +18,9 @@ import { Route as rootRoute } from './routes/__root'
 
 const AboutLazyImport = createFileRoute('/about')()
 const IndexLazyImport = createFileRoute('/')()
+const ReservationIndexLazyImport = createFileRoute('/reservation/')()
 const TripsPageLazyImport = createFileRoute('/trips/page')()
+const ReservationSuccessLazyImport = createFileRoute('/reservation/success')()
 
 // Create/Update Routes
 
@@ -32,10 +34,24 @@ const IndexLazyRoute = IndexLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
 
+const ReservationIndexLazyRoute = ReservationIndexLazyImport.update({
+  path: '/reservation/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/reservation/index.lazy').then((d) => d.Route),
+)
+
 const TripsPageLazyRoute = TripsPageLazyImport.update({
   path: '/trips/page',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/trips/page.lazy').then((d) => d.Route))
+
+const ReservationSuccessLazyRoute = ReservationSuccessLazyImport.update({
+  path: '/reservation/success',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/reservation/success.lazy').then((d) => d.Route),
+)
 
 // Populate the FileRoutesByPath interface
 
@@ -49,8 +65,16 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutLazyImport
       parentRoute: typeof rootRoute
     }
+    '/reservation/success': {
+      preLoaderRoute: typeof ReservationSuccessLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/trips/page': {
       preLoaderRoute: typeof TripsPageLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/reservation/': {
+      preLoaderRoute: typeof ReservationIndexLazyImport
       parentRoute: typeof rootRoute
     }
   }
@@ -61,7 +85,9 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren([
   IndexLazyRoute,
   AboutLazyRoute,
+  ReservationSuccessLazyRoute,
   TripsPageLazyRoute,
+  ReservationIndexLazyRoute,
 ])
 
 /* prettier-ignore-end */
