@@ -36,8 +36,8 @@ export const getReservations = async (
 export const getReservation = async (
   id: number,
   params?: CurrencyParams
-): Promise<Reservation> =>
-  fetch(
+): Promise<Reservation> => {
+  const res = await fetch(
     BASE_API_URL +
       "reservation/" +
       id +
@@ -48,7 +48,14 @@ export const getReservation = async (
         "Content-Type": "application/json",
       },
     }
-  ).then((res) => res.json() as Promise<Reservation>);
+  );
+
+  const data = (await res.json()) as Reservation;
+  data.trip.departureTime = new Date(data.trip.departureTime);
+  data.trip.arrivalTime = new Date(data.trip.arrivalTime);
+
+  return data;
+};
 
 export const deleteReservation = async (id: number): Promise<boolean> =>
   fetch(BASE_API_URL + "reservation/" + id, {
