@@ -35,16 +35,6 @@ export const Route = createFileRoute("/trips/page")({
   component: Trips,
 });
 
-const updateParameters = () => {
-  const queryParams = {
-    departure: state.departure,
-    arrival: state.arrival,
-    departureTime: state.departureTime,
-  };
-  const queryString = new URLSearchParams(queryParams).toString();
-  window.history.pushState({}, "", `/trips/page?${queryString}`);
-};
-
 export default function Trips() {
   const [seatsValue, setSeatsValue] = useState<number>(1);
 
@@ -58,6 +48,12 @@ export default function Trips() {
     departureTime: departureTime,
   });
 
+  const updateParameters = () => {
+    const queryString = new URLSearchParams(
+      state as unknown as Record<string, string>
+    ).toString();
+    void navigate({ search: queryString });
+  };
 
   const setArrival = (value: number) =>
     setState((prevState) => ({ ...prevState, arrival: value }));
