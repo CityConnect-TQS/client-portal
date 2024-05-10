@@ -211,11 +211,13 @@ export default function Trips() {
                       .substring(0, 10) === departureTime
                 )
                 .map((trip) => (
-                  <TripCard
+                  <Link
                     key={trip.id}
-                    isLoaded={!isTripsPending}
-                    trip={trip}
-                  />
+                    to={`/reservation`}
+                    className="overflow-visible"
+                  >
+                    <TripCard isLoaded={!isTripsPending} trip={trip} />
+                  </Link>
                 ))}
             </div>
             {(trips ?? []).length === 0 && (
