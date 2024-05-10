@@ -10,7 +10,7 @@ import { City } from "@/types/city";
 import { useQuery } from "@tanstack/react-query";
 import { getCities } from "@/service/cityService";
 import { useState } from "react";
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { NavbarClient } from "@/components/navbar";
 import { getTrips } from "@/service/tripService";
 import TripCard from "@/components/tripcard";
@@ -36,9 +36,34 @@ export const Route = createFileRoute("/trips/page")({
 });
 
 export default function Trips() {
-  const [seatsValue, setSeatsValue] = useState<number>(1);
+  const navigate = useNavigate();
 
   const { departure, arrival, departureTime } = Route.useSearch();
+
+  if (
+    departure === undefined ||
+    arrival === undefined ||
+    departureTime === undefined
+  ) {
+    const stateTemp = {
+      arrival: arrival,
+      departure: departure,
+      departureTime: departureTime,
+    };
+
+    if (departure === undefined) {
+      stateTemp.departure = 1;
+    }
+    if (arrival === undefined) {
+      stateTemp.arrival = 2;
+    }
+    if (departureTime === undefined) {
+      stateTemp.departureTime = new Date().toISOString().split("T")[0];
+    }
+
+    void navigate({ to: "/trips/page", search: stateTemp });
+  }
+
   const [cookies] = useCookies();
   const currency = (cookies.currency as Currency) ?? "EUR";
   const [seats, setSeats] = useState<number>(1);
