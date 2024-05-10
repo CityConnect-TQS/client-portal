@@ -218,6 +218,7 @@ export default function Trips() {
           </div>
         ) : (
           <div className="flex justify-around pb-16 pt-16">
+            {trips?.length !== 0 ? (
             <div className="grid px-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-2 lg:gap-y-16 md:px-8 gap-12">
               {trips?.map((trip) => (
                 <Link
@@ -229,7 +230,7 @@ export default function Trips() {
                 </Link>
               ))}
             </div>
-            {(trips ?? []).length === 0 && (
+            ) : (
               <h1 className="text-3xl font-bold pt-32 text-center items-center">
                 No trips available for this date
               </h1>
