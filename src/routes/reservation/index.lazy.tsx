@@ -77,7 +77,7 @@ function Index() {
 
         <div className="flex flex-col gap-2">
           {layout.map((row) => (
-            <div key={row.id} className="flex flex-row gap-2">
+            <div key={row.id} className="flex flex-row justify-end gap-2">
               {row.seats.map((seat) => (
                 <SeatButton
                   key={seat.id}
