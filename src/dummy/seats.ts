@@ -33,6 +33,25 @@ export const dummyLayout: Row[] = [
   },
   {
     id: 3,
+    seats: [{ id: "J", isEnabled: false, isAlreadyReserved: false }],
+  },
+  {
+    id: 4,
+    seats: [
+      { id: "A", isEnabled: false, isAlreadyReserved: false },
+      { id: "B", isEnabled: false, isAlreadyReserved: true },
+      { id: "C", isEnabled: false, isAlreadyReserved: false },
+      { id: "D", isEnabled: false, isAlreadyReserved: false },
+      { id: "E", isEnabled: false, isAlreadyReserved: false },
+      { id: "F", isEnabled: false, isAlreadyReserved: false },
+      { id: "G", isEnabled: false, isAlreadyReserved: false },
+      { id: "H", isEnabled: false, isAlreadyReserved: false },
+      { id: "I", isEnabled: false, isAlreadyReserved: false },
+      { id: "J", isEnabled: false, isAlreadyReserved: false },
+    ],
+  },
+  {
+    id: 5,
     seats: [
       { id: "A", isEnabled: false, isAlreadyReserved: false },
       { id: "B", isEnabled: false, isAlreadyReserved: false },
@@ -41,7 +60,7 @@ export const dummyLayout: Row[] = [
       { id: "E", isEnabled: false, isAlreadyReserved: false },
       { id: "F", isEnabled: false, isAlreadyReserved: false },
       { id: "G", isEnabled: false, isAlreadyReserved: false },
-      { id: "H", isEnabled: false, isAlreadyReserved: false },
+      { id: "H", isEnabled: false, isAlreadyReserved: true },
       { id: "I", isEnabled: false, isAlreadyReserved: false },
       { id: "J", isEnabled: false, isAlreadyReserved: false },
     ],
