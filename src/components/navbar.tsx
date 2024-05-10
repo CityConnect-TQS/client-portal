@@ -13,12 +13,17 @@ import { ThemeSwitcher } from "./themeSwitcher";
 import { Currency, currencyCodes } from "@/types/currency";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "@tanstack/react-router";
+import { User } from "@/types/user.ts";
 
 export function NavbarClient() {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [cookies, setCookies] = useCookies(["currency"]);
+  const [cookies, setCookies] = useCookies(["currency", "user"]);
   const currency = (cookies.currency as Currency) ?? "EUR";
+  const user =
+    cookies.user !== undefined
+      ? (JSON.parse(cookies.user as string) as User)
+      : undefined;
 
   return (
     <Navbar onMenuOpenChange={setIsMenuOpen}>
@@ -54,8 +59,6 @@ export function NavbarClient() {
           <Button variant="light">Login</Button>
         </NavbarItem>
         <NavbarItem>
-          <Button variant="flat">Sign Up</Button>
-        </NavbarItem>
           <Select
             placeholder="Select a currency"
             defaultSelectedKeys={[currency]}
