@@ -25,33 +25,36 @@ export const loginUser = async (user: UserLogin): Promise<User | null> =>
     return res.json() as Promise<User>;
   });
 
-export const getUser = async (id: number): Promise<User> =>
-  fetch(BASE_API_URL + "user/" + id, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }).then((res) => res.json() as Promise<User>);
-
-export const getUserReservations = async (id: number): Promise<Reservation[]> =>
+export const getUserReservations = async (
+  id: number,
+  jwt: string
+): Promise<Reservation[]> =>
   fetch(BASE_API_URL + "user/" + id + "/reservations", {
     headers: {
       "Content-Type": "application/json",
+      Authorization: "Bearer " + jwt,
     },
   }).then((res) => res.json() as Promise<Reservation[]>);
 
-export const updateUser = async (id: number, user: UserCreate): Promise<User> =>
+export const updateUser = async (
+  id: number,
+  user: UserCreate,
+  jwt: string
+): Promise<User> =>
   fetch(BASE_API_URL + "user/" + id, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
+      Authorization: "Bearer " + jwt,
     },
     body: JSON.stringify(user),
   }).then((res) => res.json() as Promise<User>);
 
-export const deleteUser = async (id: number): Promise<boolean> =>
+export const deleteUser = async (id: number, jwt: string): Promise<boolean> =>
   fetch(BASE_API_URL + "user/" + id, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
+      Authorization: "Bearer " + jwt,
     },
   }).then((res) => res.status === 200);
