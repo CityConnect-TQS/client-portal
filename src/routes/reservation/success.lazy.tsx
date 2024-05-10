@@ -1,9 +1,7 @@
 import { NavbarClient } from "@/components/navbar";
 import TripCard from "@/components/tripcard";
 import { getReservation } from "@/service/reservationService";
-import { getTrip } from "@/service/tripService";
 import { Reservation } from "@/types/reservation";
-import { Trip } from "@/types/trip";
 import { useQuery } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useCookies } from "react-cookie";
@@ -13,7 +11,7 @@ export const Route = createLazyFileRoute("/reservation/success")({
 });
 
 function Success() {
-  const [cookies, setCookie] = useCookies(["reservation"]);
+  const [cookies] = useCookies(["reservation"]);
   const reservationId: number = parseInt(cookies.reservation as string);
 
   const { isPending: isPending, data: reservation } = useQuery<Reservation>({
