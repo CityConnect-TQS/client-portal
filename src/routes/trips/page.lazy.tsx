@@ -37,14 +37,13 @@ export const Route = createFileRoute("/trips/page")({
 
 export default function Trips() {
   const navigate = useNavigate();
-
   const { departure, arrival, departureTime } = Route.useSearch();
+  const areParametersValid =
+    departure !== undefined &&
+    arrival !== undefined &&
+    departureTime !== undefined;
 
-  if (
-    departure === undefined ||
-    arrival === undefined ||
-    departureTime === undefined
-  ) {
+  if (!areParametersValid) {
     const stateTemp = {
       arrival: arrival,
       departure: departure,
@@ -61,7 +60,7 @@ export default function Trips() {
       stateTemp.departureTime = new Date().toISOString().split("T")[0];
     }
 
-    void navigate({ to: "/trips/page", search: stateTemp });
+    void navigate({ to: "/trips/page", search: stateTemp, replace: true });
   }
 
   const [cookies] = useCookies();
@@ -219,17 +218,17 @@ export default function Trips() {
         ) : (
           <div className="flex justify-around pb-16 pt-16">
             {trips?.length !== 0 ? (
-            <div className="grid px-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-2 lg:gap-y-16 md:px-8 gap-12">
-              {trips?.map((trip) => (
-                <Link
-                  key={trip.id}
-                  to={`/reservation`}
-                  className="overflow-visible"
-                >
-                  <TripCard isLoaded={!isTripsPending} trip={trip} />
-                </Link>
-              ))}
-            </div>
+              <div className="grid px-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-2 lg:gap-y-16 md:px-8 gap-12">
+                {trips?.map((trip) => (
+                  <Link
+                    key={trip.id}
+                    to={`/reservation`}
+                    className="overflow-visible"
+                  >
+                    <TripCard isLoaded={!isTripsPending} trip={trip} />
+                  </Link>
+                ))}
+              </div>
             ) : (
               <h1 className="text-3xl font-bold pt-32 text-center items-center">
                 No trips available for this date
