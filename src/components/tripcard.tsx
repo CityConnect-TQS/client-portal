@@ -14,14 +14,16 @@ interface TripCardProps {
   trip: Trip;
   isLoaded: boolean;
   clickable?: boolean;
+  onClick?: () => void;
 }
 
 export default function TripCard({
   trip,
   isLoaded,
   clickable = true,
+  onClick,
 }: TripCardProps) {
-  const [cookies, setCookies] = useCookies();
+  const [cookies] = useCookies(["currency"]);
 
   return (
     <Skeleton isLoaded={isLoaded} className="rounded-lg overflow-visible">
@@ -31,13 +33,7 @@ export default function TripCard({
         id={"tripCard" + trip.id}
         isPressable={clickable && trip.freeSeats > 0}
         isDisabled={trip.freeSeats === 0}
-        onClick={
-          clickable
-            ? () => {
-                setCookies("trip", trip.id.toString(), { path: "/" });
-              }
-            : undefined
-        }
+        onClick={onClick}
       >
         <CardHeader className="flex flex-col justify-start items-start space-x-80">
           <div className="flex justify-between space-x-4 self-center items-center">
