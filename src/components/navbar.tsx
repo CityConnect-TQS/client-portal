@@ -4,7 +4,6 @@ import {
   NavbarContent,
   NavbarItem,
   NavbarMenuToggle,
-  Link,
   Button,
   Select,
   SelectItem,
@@ -13,8 +12,10 @@ import { useState } from "react";
 import { ThemeSwitcher } from "./themeSwitcher";
 import { Currency, currencyCodes } from "@/types/currency";
 import { useCookies } from "react-cookie";
+import { useNavigate } from "@tanstack/react-router";
 
 export function NavbarClient() {
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [cookies, setCookies] = useCookies(["currency"]);
   const currency = (cookies.currency as Currency) ?? "EUR";
@@ -27,14 +28,19 @@ export function NavbarClient() {
           className="sm:hidden"
         />
         <NavbarBrand>
-          <Link href="/">
+          <Button
+            onClick={() => void navigate({ to: "/" })}
+            size="lg"
+            className="px-4"
+            variant="light"
+          >
             <img
               src="/logo.svg"
               alt="CityConnect"
-              className="h-8 mr-4 w-auto rounded"
+              className="h-8 w-auto rounded"
             />
             <p className="font-bold text-inherit">CityConnect</p>
-          </Link>
+          </Button>
         </NavbarBrand>
       </NavbarContent>
 
@@ -45,14 +51,10 @@ export function NavbarClient() {
       <NavbarContent justify="end">
         <ThemeSwitcher />
         <NavbarItem className="hidden lg:flex">
-          <Link href="#" className="text-primary">
-            Login
-          </Link>
+          <Button variant="light">Login</Button>
         </NavbarItem>
         <NavbarItem>
-          <Button as={Link} href="#" variant="flat">
-            Sign Up
-          </Button>
+          <Button variant="flat">Sign Up</Button>
         </NavbarItem>
         <NavbarItem className="w-28">
           <Select
