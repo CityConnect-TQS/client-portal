@@ -9,7 +9,7 @@ import { Trip } from "@/types/trip";
 import { Button } from "@nextui-org/react";
 import { useQuery } from "@tanstack/react-query";
 import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useCookies } from "react-cookie";
 
 export const Route = createLazyFileRoute("/reservation/")({
