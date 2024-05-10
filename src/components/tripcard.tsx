@@ -25,8 +25,8 @@ export default function TripCard({
   const [cookies, setCookies] = useCookies();
 
   return (
-    <Skeleton isLoaded={isLoaded} className="rounded-lg">
-      <Link href={`/reservation`}>
+    <Skeleton isLoaded={isLoaded} className="rounded-lg overflow-visible">
+      <Link href={`/reservation`} className="overflow-visible">
         <Card
           className="p-2"
           key={trip.id}
