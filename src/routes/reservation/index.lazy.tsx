@@ -6,11 +6,13 @@ import { createReservation } from "@/service/reservationService";
 import { getTrip } from "@/service/tripService";
 import { Row } from "@/types/reservation";
 import { Trip } from "@/types/trip";
-import { Button } from "@nextui-org/react";
+import { Button, Chip } from "@nextui-org/react";
 import { useQuery } from "@tanstack/react-query";
 import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useCookies } from "react-cookie";
+import { User } from "@/types/user.ts";
+import { MaterialSymbol } from "react-material-symbols";
 
 export const Route = createLazyFileRoute("/reservation/")({
   component: Index,
@@ -18,8 +20,9 @@ export const Route = createLazyFileRoute("/reservation/")({
 
 function Index() {
   const router = useNavigate();
-  const [cookies, setCookie] = useCookies(["trip", "reservation"]);
+  const [cookies, setCookie] = useCookies(["trip", "reservation", "user"]);
   const tripId: number = parseInt(cookies.trip as string);
+  const user = cookies.user as User | undefined;
   const [layout, setLayout] = useState<Row[]>(dummyLayout);
   const seats = layout.reduce(
     (acc, row) =>
@@ -27,9 +30,9 @@ function Index() {
       row.seats.reduce(
         (acc, seat) =>
           seat.isEnabled && !seat.isAlreadyReserved ? acc + 1 : acc,
-        0
+        0,
       ),
-    0
+    0,
   );
 
   const { isPending: isPending, data: trip } = useQuery<Trip>({
@@ -90,27 +93,46 @@ function Index() {
           ))}
         </div>
 
-        <Button
-          color="primary"
-          isDisabled={seats === 0 || seats > trip.freeSeats}
-          onClick={() => {
-            createReservation({
-              trip: { id: tripId },
-              user: { id: 1 },
-              seats: seats,
-            })
-              .then((reservation) => {
-                setCookie("reservation", reservation.id, { path: "/" });
-                void router({ to: "/reservation/success" });
-              })
-              .catch(() => {
-                // TODO: Refactor this to use a toast
-                alert("Error creating reservation.");
+        {user ? (
+          <Button
+            color="primary"
+            isDisabled={seats === 0 || seats > trip.freeSeats}
+            onClick={() => {
+              console.log({
+                trip: { id: tripId },
+                user: { id: user.id },
+                seats: seats,
               });
-          }}
-        >
-          Submit
-        </Button>
+              createReservation(
+                {
+                  trip: { id: tripId },
+                  user: { id: user.id },
+                  seats: seats,
+                },
+                user.token,
+              )
+                .then((reservation) => {
+                  setCookie("reservation", reservation.id, { path: "/" });
+                  void router({ to: "/reservation/success" });
+                })
+                .catch(() => {
+                  // TODO: Refactor this to use a toast
+                  alert("Error creating reservation.");
+                });
+            }}
+          >
+            Submit
+          </Button>
+        ) : (
+          <Chip
+            color="danger"
+            variant={"flat"}
+            startContent={<MaterialSymbol icon="error" size={20} />}
+          >
+            You&apos;re currently not signed in. Do it first to create a
+            reservation.
+          </Chip>
+        )}
       </div>
     </div>
   );
