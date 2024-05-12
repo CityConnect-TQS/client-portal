@@ -2,10 +2,13 @@ import { Reservation, ReservationCreate } from "@/types/reservation";
 import { BASE_API_URL } from "./config";
 import { CurrencyParams } from "@/types/currency";
 
-export const createReservation = async (
-  reservation: ReservationCreate,
-  jwt: string,
-): Promise<Reservation> =>
+export const createReservation = async ({
+  reservation,
+  jwt,
+}: {
+  reservation: ReservationCreate;
+  jwt: string;
+}): Promise<Reservation> =>
   fetch(BASE_API_URL + "reservation", {
     method: "POST",
     headers: {
@@ -13,7 +16,12 @@ export const createReservation = async (
       Authorization: "Bearer " + jwt,
     },
     body: JSON.stringify(reservation),
-  }).then((res) => res.json() as Promise<Reservation>);
+  }).then((res) => {
+    if (res.status === 400) {
+      throw new Error("No seats available. Refresh the page.");
+    }
+    return res.json() as Promise<Reservation>;
+  });
 
 export const getReservation = async (
   id: number,

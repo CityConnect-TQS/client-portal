@@ -7,7 +7,7 @@ import { getTrip } from "@/service/tripService";
 import { Row } from "@/types/reservation";
 import { Trip } from "@/types/trip";
 import { Button, Chip } from "@nextui-org/react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useCookies } from "react-cookie";
@@ -64,6 +64,14 @@ function Index() {
     },
   });
 
+  const mutation = useMutation({
+    mutationFn: createReservation,
+    onSuccess: (reservation) => {
+      setCookie("reservation", reservation.id, { path: "/" });
+      void router({ to: "/reservation/success" });
+    },
+  });
+
   return (
     <div className="flex flex-col gap-8">
       <NavbarClient />
@@ -94,35 +102,33 @@ function Index() {
         </div>
 
         {user ? (
-          <Button
-            color="primary"
-            isDisabled={seats === 0 || seats > trip.freeSeats}
-            onClick={() => {
-              console.log({
-                trip: { id: tripId },
-                user: { id: user.id },
-                seats: seats,
-              });
-              createReservation(
-                {
-                  trip: { id: tripId },
-                  user: { id: user.id },
-                  seats: seats,
-                },
-                user.token,
-              )
-                .then((reservation) => {
-                  setCookie("reservation", reservation.id, { path: "/" });
-                  void router({ to: "/reservation/success" });
-                })
-                .catch(() => {
-                  // TODO: Refactor this to use a toast
-                  alert("Error creating reservation.");
+          <>
+            {mutation.isError && (
+              <Chip
+                color="danger"
+                variant={"flat"}
+                startContent={<MaterialSymbol icon="error" size={20} />}
+              >
+                {mutation.error.message}
+              </Chip>
+            )}
+            <Button
+              color="primary"
+              isDisabled={seats === 0 || seats > trip.freeSeats}
+              onClick={() => {
+                void mutation.mutateAsync({
+                  reservation: {
+                    trip: { id: tripId },
+                    user: { id: user.id },
+                    seats: seats,
+                  },
+                  jwt: user?.token,
                 });
-            }}
-          >
-            Submit
-          </Button>
+              }}
+            >
+              Submit
+            </Button>
+          </>
         ) : (
           <Chip
             color="danger"
