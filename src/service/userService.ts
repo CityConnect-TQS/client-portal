@@ -9,9 +9,14 @@ export const createUser = async (user: UserCreate): Promise<User> =>
       "Content-Type": "application/json",
     },
     body: JSON.stringify(user),
-  }).then((res) => res.json() as Promise<User>);
+  }).then((res) => {
+    if (res.status === 400) {
+      throw new Error("User already exists");
+    }
+    return res.json() as Promise<User>;
+  });
 
-export const loginUser = async (user: UserLogin): Promise<User | null> =>
+export const loginUser = async (user: UserLogin): Promise<User> =>
   fetch(BASE_API_URL + "user/login", {
     method: "POST",
     headers: {
@@ -20,14 +25,14 @@ export const loginUser = async (user: UserLogin): Promise<User | null> =>
     body: JSON.stringify(user),
   }).then((res) => {
     if (res.status === 401) {
-      return null;
+      throw new Error("Invalid credentials");
     }
     return res.json() as Promise<User>;
   });
 
 export const getUserReservations = async (
   id: number,
-  jwt: string
+  jwt: string,
 ): Promise<Reservation[]> =>
   fetch(BASE_API_URL + "user/" + id + "/reservations", {
     headers: {
@@ -39,7 +44,7 @@ export const getUserReservations = async (
 export const updateUser = async (
   id: number,
   user: UserCreate,
-  jwt: string
+  jwt: string,
 ): Promise<User> =>
   fetch(BASE_API_URL + "user/" + id, {
     method: "PUT",
