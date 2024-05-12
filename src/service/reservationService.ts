@@ -5,26 +5,20 @@ import { CurrencyParams } from "@/types/currency";
 export const createReservation = async (
   reservation: ReservationCreate,
   jwt: string,
-  params?: CurrencyParams
 ): Promise<Reservation> =>
-  fetch(
-    BASE_API_URL +
-      "reservation?" +
-      new URLSearchParams(params as Record<string, string>),
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + jwt,
-      },
-      body: JSON.stringify(reservation),
-    }
-  ).then((res) => res.json() as Promise<Reservation>);
+  fetch(BASE_API_URL + "reservation", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + jwt,
+    },
+    body: JSON.stringify(reservation),
+  }).then((res) => res.json() as Promise<Reservation>);
 
 export const getReservation = async (
   id: number,
   jwt: string,
-  params?: CurrencyParams
+  params?: CurrencyParams,
 ): Promise<Reservation> => {
   const res = await fetch(
     BASE_API_URL +
@@ -37,7 +31,7 @@ export const getReservation = async (
         "Content-Type": "application/json",
         Authorization: "Bearer " + jwt,
       },
-    }
+    },
   );
 
   const data = (await res.json()) as Reservation;
@@ -49,7 +43,7 @@ export const getReservation = async (
 
 export const deleteReservation = async (
   id: number,
-  jwt: string
+  jwt: string,
 ): Promise<boolean> =>
   fetch(BASE_API_URL + "reservation/" + id, {
     method: "DELETE",
