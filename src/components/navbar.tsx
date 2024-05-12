@@ -4,6 +4,7 @@ import {
   Dropdown,
   DropdownItem,
   DropdownMenu,
+  DropdownSection,
   DropdownTrigger,
   Navbar,
   NavbarBrand,
@@ -12,6 +13,7 @@ import {
   NavbarMenuToggle,
   Select,
   SelectItem,
+  useDisclosure,
 } from "@nextui-org/react";
 import { useState } from "react";
 import { ThemeSwitcher } from "./themeSwitcher";
@@ -20,16 +22,26 @@ import { useCookies } from "react-cookie";
 import { useNavigate } from "@tanstack/react-router";
 import { User } from "@/types/user.ts";
 import { MaterialSymbol } from "react-material-symbols";
+import LoginModal from "@/components/loginModal.tsx";
+import RegisterModal from "@/components/registerModal.tsx";
 
 export function NavbarClient() {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [cookies, setCookies] = useCookies(["currency", "user"]);
+  const [cookies, setCookies, removeCookies] = useCookies(["currency", "user"]);
   const currency = (cookies.currency as Currency) ?? "EUR";
-  const user =
-    cookies.user !== undefined
-      ? (JSON.parse(cookies.user as string) as User)
-      : undefined;
+  const user = cookies.user !== undefined ? (cookies.user as User) : undefined;
+
+  const {
+    isOpen: isOpenLogin,
+    onOpen: onOpenLogin,
+    onOpenChange: onOpenChangeLogin,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenRegister,
+    onOpen: onOpenRegister,
+    onOpenChange: onOpenChangeRegister,
+  } = useDisclosure();
 
   return (
     <Navbar onMenuOpenChange={setIsMenuOpen}>
@@ -87,33 +99,75 @@ export function NavbarClient() {
                 className="transition-transform"
                 color={user ? "primary" : "default"}
                 fallback={
-                  <MaterialSymbol
-                    icon={"account_circle_off"}
-                    size={24}
-                    className={"text-default-500"}
-                  />
+                  user ? (
+                    <p className={"text-xl"}>{user.name.charAt(0)}</p>
+                  ) : (
+                    <MaterialSymbol
+                      icon={"account_circle_off"}
+                      size={24}
+                      className={"text-default-500"}
+                    />
+                  )
                 }
-                name={user?.name}
               />
             </DropdownTrigger>
             <DropdownMenu aria-label="Profile Actions" variant="flat">
-              <DropdownItem key="profile" className="h-14 gap-2">
-                <p className="font-semibold">Signed in as</p>
-                <p className="font-semibold">zoey@example.com</p>
+              <DropdownSection showDivider>
+                {user ? (
+                  <DropdownItem key="profile" className="h-14 gap-2">
+                    <p>Signed in as</p>
+                    <p className="font-semibold">{user.name}</p>
+                  </DropdownItem>
+                ) : (
+                  <DropdownItem
+                    key="login"
+                    onClick={onOpenLogin}
+                    startContent={<MaterialSymbol icon="login" size={20} />}
+                  >
+                    Login
+                  </DropdownItem>
+                )}
+                {user ? (
+                  <DropdownItem
+                    key="logout"
+                    color="danger"
+                    startContent={<MaterialSymbol icon="logout" size={20} />}
+                    onClick={() => removeCookies("user")}
+                  >
+                    Log Out
+                  </DropdownItem>
+                ) : (
+                  <DropdownItem
+                    key="register"
+                    onClick={onOpenRegister}
+                    startContent={
+                      <MaterialSymbol icon="app_registration" size={20} />
+                    }
+                  >
+                    Sign up
+                  </DropdownItem>
+                )}
+              </DropdownSection>
+              <DropdownItem
+                key="settings"
+                startContent={<MaterialSymbol icon="settings" size={20} />}
+              >
+                Settings
               </DropdownItem>
-              <DropdownItem key="settings">My Settings</DropdownItem>
-              <DropdownItem key="team_settings">Team Settings</DropdownItem>
-              <DropdownItem key="analytics">Analytics</DropdownItem>
-              <DropdownItem key="system">System</DropdownItem>
-              <DropdownItem key="configurations">Configurations</DropdownItem>
-              <DropdownItem key="help_and_feedback">
+              <DropdownItem
+                key="help_and_feedback"
+                startContent={<MaterialSymbol icon="help" size={20} />}
+              >
                 Help & Feedback
-              </DropdownItem>
-              <DropdownItem key="logout" color="danger">
-                Log Out
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>
+
+          <LoginModal isOpen={isOpenLogin} onOpenChange={onOpenChangeLogin} />
+          <RegisterModal
+            isOpen={isOpenRegister}
+            onOpenChange={onOpenChangeRegister}
+          />
         </NavbarItem>
       </NavbarContent>
     </Navbar>
