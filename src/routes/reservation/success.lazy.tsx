@@ -3,20 +3,27 @@ import TripCard from "@/components/tripcard";
 import { getReservation } from "@/service/reservationService";
 import { Reservation } from "@/types/reservation";
 import { useQuery } from "@tanstack/react-query";
-import { createLazyFileRoute } from "@tanstack/react-router";
+import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
 import { useCookies } from "react-cookie";
+import { User } from "@/types/user.ts";
 
 export const Route = createLazyFileRoute("/reservation/success")({
   component: Success,
 });
 
 function Success() {
-  const [cookies] = useCookies(["reservation"]);
+  const navigate = useNavigate();
+  const [cookies] = useCookies(["reservation", "user"]);
   const reservationId: number = parseInt(cookies.reservation as string);
+  const user = cookies.user as User | undefined;
 
-  const { isPending: isPending, data: reservation } = useQuery<Reservation>({
-    queryKey: ["reservation", reservationId],
-    queryFn: () => getReservation(reservationId),
+  if (user === undefined) {
+    void navigate({ to: "/" });
+  }
+
+  const { isPending, data: reservation } = useQuery<Reservation>({
+    queryKey: ["reservation", reservationId, user?.token],
+    queryFn: () => getReservation(reservationId, user?.token ?? ""),
   });
 
   return (

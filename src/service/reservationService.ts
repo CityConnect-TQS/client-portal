@@ -2,40 +2,31 @@ import { Reservation, ReservationCreate } from "@/types/reservation";
 import { BASE_API_URL } from "./config";
 import { CurrencyParams } from "@/types/currency";
 
-export const createReservation = async (
-  reservation: ReservationCreate,
-  params?: CurrencyParams
-): Promise<Reservation> =>
-  fetch(
-    BASE_API_URL +
-      "reservation?" +
-      new URLSearchParams(params as Record<string, string>),
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(reservation),
+export const createReservation = async ({
+  reservation,
+  jwt,
+}: {
+  reservation: ReservationCreate;
+  jwt: string;
+}): Promise<Reservation> =>
+  fetch(BASE_API_URL + "reservation", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + jwt,
+    },
+    body: JSON.stringify(reservation),
+  }).then((res) => {
+    if (res.status === 400) {
+      throw new Error("No seats available. Refresh the page.");
     }
-  ).then((res) => res.json() as Promise<Reservation>);
-
-export const getReservations = async (
-  params?: CurrencyParams
-): Promise<Reservation[]> =>
-  fetch(
-    BASE_API_URL +
-      "reservation?" +
-      new URLSearchParams(params as Record<string, string>),
-    {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  ).then((res) => res.json() as Promise<Reservation[]>);
+    return res.json() as Promise<Reservation>;
+  });
 
 export const getReservation = async (
   id: number,
-  params?: CurrencyParams
+  jwt: string,
+  params?: CurrencyParams,
 ): Promise<Reservation> => {
   const res = await fetch(
     BASE_API_URL +
@@ -46,8 +37,9 @@ export const getReservation = async (
     {
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer " + jwt,
       },
-    }
+    },
   );
 
   const data = (await res.json()) as Reservation;
@@ -57,10 +49,14 @@ export const getReservation = async (
   return data;
 };
 
-export const deleteReservation = async (id: number): Promise<boolean> =>
+export const deleteReservation = async (
+  id: number,
+  jwt: string,
+): Promise<boolean> =>
   fetch(BASE_API_URL + "reservation/" + id, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
+      Authorization: "Bearer " + jwt,
     },
   }).then((res) => res.status === 200);
