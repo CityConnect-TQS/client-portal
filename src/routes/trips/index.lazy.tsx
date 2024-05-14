@@ -77,11 +77,11 @@ export default function Trips() {
   };
 
   const setArrival = (value: number) =>
-    setState((prevState) => ({ ...prevState, arrival: value }));
+    setState((prevState: TripInfo) => ({ ...prevState, arrival: value }));
   const setDeparture = (value: number) =>
-    setState((prevState) => ({ ...prevState, departure: value }));
+    setState((prevState: TripInfo) => ({ ...prevState, departure: value }));
   const setDepartureTime = (value: string) =>
-    setState((prevState) => ({ ...prevState, departureTime: value }));
+    setState((prevState: TripInfo) => ({ ...prevState, departureTime: value }));
 
   const { isPending: isCitiesPending, data: cities } =
     useQuery<City[]>({
@@ -121,8 +121,6 @@ export default function Trips() {
                 defaultSelectedKey={departure.toString()}
                 onSelectionChange={(value) => {
                   setDeparture(value ? parseInt(value.toString()) : 0);
-                  setArrival(arrival);
-                  setDepartureTime(departureTime);
                 }}
               >
                 {cities
@@ -146,8 +144,6 @@ export default function Trips() {
                 defaultSelectedKey={arrival.toString()}
                 onSelectionChange={(value) => {
                   setArrival(value ? parseInt(value.toString()) : 0);
-                  setDeparture(departure);
-                  setDepartureTime(departureTime);
                 }}
               >
                 {cities
@@ -174,9 +170,6 @@ export default function Trips() {
               defaultValue={seats.toString()}
               onValueChange={(value) => {
                 setSeats(value ? parseInt(value.toString()) : 0);
-                setArrival(arrival);
-                setDeparture(departure);
-                setDepartureTime(departureTime);
               }}
             />
             <Input
@@ -186,8 +179,6 @@ export default function Trips() {
               className="max-w-xs"
               onValueChange={(value) => {
                 setDepartureTime(value.toString());
-                setArrival(arrival);
-                setDeparture(departure);
               }}
               defaultValue={
                 departureTime
@@ -214,7 +205,7 @@ export default function Trips() {
           <div className="flex justify-around pb-16 pt-16">
             {trips?.length !== 0 ? (
               <div className="grid px-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-2 lg:gap-y-16 md:px-8 gap-12">
-                {trips?.map((trip) => (
+                {trips?.sort((a, b) => a.departureTime.getTime() - b.departureTime.getTime()).map((trip) => (
                   <TripCard
                     key={trip.id}
                     isLoaded={!isTripsPending}
