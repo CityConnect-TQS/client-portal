@@ -84,6 +84,7 @@ export default function LoginModal({
                       onChange={(e) => handleChange(e.target.value)}
                       endContent={<MaterialSymbol icon="email" size={20} />}
                       label="Email"
+                      id={"email"}
                       onBlur={handleBlur}
                       placeholder="Enter your email"
                       isInvalid={state.meta.errors.length > 0}
@@ -105,6 +106,7 @@ export default function LoginModal({
                       onChange={(e) => handleChange(e.target.value)}
                       endContent={<MaterialSymbol icon="password" size={20} />}
                       label="Password"
+                      id={"password"}
                       onBlur={handleBlur}
                       placeholder="Enter your password"
                       type="password"
@@ -120,6 +122,7 @@ export default function LoginModal({
               {mutation.isError ? (
                 <Chip
                   color="danger"
+                  id={"loginError"}
                   variant={"flat"}
                   startContent={<MaterialSymbol icon="error" size={20} />}
                 >
@@ -134,7 +137,8 @@ export default function LoginModal({
                     color={isSubmitting ? "default" : "primary"}
                     variant={isSubmitting ? "flat" : "solid"}
                     isDisabled={!canSubmit}
-                    onPress={() => {
+                    id={"loginBtn"}
+                    onClick={() => {
                       handleSubmit()
                         .then(onClose)
                         .catch(() => {
