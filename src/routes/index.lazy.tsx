@@ -113,6 +113,7 @@ function Index() {
             <DatePicker
               label="Departure"
               className="max-w-xs"
+              id="departureTime"
               granularity="day"
               onChange={(date) => setDepartureTime(date.toString())}
             />
@@ -120,6 +121,7 @@ function Index() {
               color="primary"
               size="lg"
               className="h-14"
+              id="searchBtn"
               isDisabled={!isFormValid}
               onClick={handleSearch}
             >

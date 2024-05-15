@@ -202,7 +202,7 @@ export default function Trips() {
             <p>Loading trips...</p>
           </div>
         ) : (
-          <div className="flex justify-around pb-16 pt-16">
+          <div className="flex justify-around pb-16 pt-16" id="trips">
             {trips?.length !== 0 ? (
               <div className="grid px-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-2 lg:gap-y-16 md:px-8 gap-12">
                 {trips?.sort((a, b) => a.departureTime.getTime() - b.departureTime.getTime()).map((trip) => (
@@ -220,7 +220,7 @@ export default function Trips() {
                 ))}
               </div>
             ) : (
-              <h1 className="text-3xl font-bold pt-32 text-center items-center">
+              <h1 className="text-3xl font-bold pt-32 text-center items-center" id="message">
                 No trips available for this date
               </h1>
             )}
