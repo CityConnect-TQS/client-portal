@@ -67,7 +67,7 @@ export default function RegisterModal({
         mutation.reset();
       }}
     >
-      <ModalContent>
+      <ModalContent id={"registerModal"}>
         {(onClose) => (
           <>
             <ModalHeader className="flex flex-col gap-1">
@@ -91,6 +91,7 @@ export default function RegisterModal({
                       endContent={<MaterialSymbol icon="person" size={20} />}
                       label="Name"
                       onBlur={handleBlur}
+                      id={"name"}
                       placeholder="Enter your name"
                       isInvalid={state.meta.errors.length > 0}
                       errorMessage={state.meta.errors}
@@ -109,6 +110,7 @@ export default function RegisterModal({
                       onChange={(e) => handleChange(e.target.value)}
                       endContent={<MaterialSymbol icon="email" size={20} />}
                       label="Email"
+                      id={"email"}
                       onBlur={handleBlur}
                       placeholder="Enter your email"
                       isInvalid={state.meta.errors.length > 0}
@@ -131,6 +133,7 @@ export default function RegisterModal({
                       endContent={<MaterialSymbol icon="password" size={20} />}
                       label="Password"
                       onBlur={handleBlur}
+                      id={"password"}
                       placeholder="Enter your password"
                       type="password"
                       isInvalid={state.meta.errors.length > 0}
@@ -145,6 +148,7 @@ export default function RegisterModal({
               {mutation.isError ? (
                 <Chip
                   color="danger"
+                  id={"loginError"}
                   variant={"flat"}
                   startContent={<MaterialSymbol icon="error" size={20} />}
                 >
@@ -159,7 +163,8 @@ export default function RegisterModal({
                     color={isSubmitting ? "default" : "primary"}
                     variant={isSubmitting ? "flat" : "solid"}
                     isDisabled={!canSubmit}
-                    onPress={() => void handleSubmit().then(onClose)}
+                    id={"signUpBtn"}
+                    onClick={() => void handleSubmit().then(onClose)}
                   >
                     {isSubmitting ? (
                       <CircularProgress
