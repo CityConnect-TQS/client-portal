@@ -2,6 +2,13 @@ import { Bus } from "./bus";
 import { City } from "./city";
 import { CurrencyParams } from "./currency";
 
+export type TripStatus =
+  | "ONTIME"
+  | "DELAYED"
+  | "DEPARTED"
+  | "ONBOARDING"
+  | "ARRIVED";
+
 export interface Trip {
   id: number;
   bus: Bus;
@@ -11,6 +18,8 @@ export interface Trip {
   arrivalTime: Date;
   price: number;
   freeSeats: number;
+  status: TripStatus;
+  delay: number;
 }
 
 export type TripReference = Pick<Trip, "id">;
