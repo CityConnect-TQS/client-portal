@@ -23,5 +23,3 @@ export type ReservationCreate = Omit<Reservation, "id" | "trip" | "user"> & {
   trip: TripReference;
   user: UserReference;
 };
-
-export type ReservationReference = Pick<Reservation, "id">;

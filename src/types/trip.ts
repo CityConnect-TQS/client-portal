@@ -1,5 +1,5 @@
-import { Bus, BusReference } from "./bus";
-import { City, CityReference } from "./city";
+import { Bus } from "./bus";
+import { City } from "./city";
 import { CurrencyParams } from "./currency";
 
 export interface Trip {
@@ -12,12 +12,6 @@ export interface Trip {
   price: number;
   freeSeats: number;
 }
-
-export type TripCreate = Omit<Trip, "id" | "bus" | "departure" | "arrival"> & {
-  bus: BusReference;
-  departure: CityReference;
-  arrival: CityReference;
-};
 
 export type TripReference = Pick<Trip, "id">;
 
