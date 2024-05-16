@@ -3,7 +3,7 @@ import { User, UserReference } from "./user";
 
 export interface Reservation {
   id: number;
-  seats: number;
+  seats: string[];
   trip: Trip;
   user: User;
 }

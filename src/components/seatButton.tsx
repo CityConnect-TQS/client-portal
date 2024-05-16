@@ -25,10 +25,10 @@ export default function SeatButton({
           layout.map((r) => ({
             ...r,
             seats: r.seats.map((s) =>
-              s.id + r.id === seat.id + row.id
+              r.id + s.id === row.id + seat.id
                 ? {
                     ...s,
-                    isEnabled: !s.enabled,
+                    enabled: !s.enabled,
                   }
                 : s,
             ),
