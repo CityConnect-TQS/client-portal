@@ -35,7 +35,7 @@ function Success() {
         </h1>
 
         <div className="flex flex-col gap-2 justify-center items-center">
-          <p>
+          <p id={"confirmText"}>
             Your trip is booked! The reservation ID is {reservation?.id} and you
             booked {reservation?.seats?.length} seat
             {reservation?.seats?.length !== 1 && "s"}:

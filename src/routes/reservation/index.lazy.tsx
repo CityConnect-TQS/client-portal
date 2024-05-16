@@ -71,7 +71,7 @@ function Index() {
                 <div key={row.id} className="flex flex-row justify-end gap-2">
                   {row.seats.map((seat) => (
                     <SeatButton
-                      key={seat.id}
+                      key={"seat" + seat.id + row.id}
                       row={row}
                       seat={seat}
                       setLayout={setLayout}
@@ -100,6 +100,7 @@ function Index() {
                 reserved.length === 0 ||
                 reserved.length > (trip?.freeSeats ?? 0)
               }
+              id={"submitBtn"}
               onClick={() => {
                 void mutation.mutateAsync({
                   reservation: {
@@ -118,6 +119,7 @@ function Index() {
           <Chip
             color="danger"
             variant={"flat"}
+            id={"notSignedInChip"}
             startContent={<MaterialSymbol icon="error" size={20} />}
           >
             You&apos;re currently not signed in. Do it first to create a

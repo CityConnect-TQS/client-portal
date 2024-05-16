@@ -15,8 +15,8 @@ export default function SeatButton({
 }: Readonly<SeatProps>) {
   return (
     <Button
-      key={seat.id}
       variant={"flat"}
+      id={"seat" + seat.id + row.id}
       color={
         seat.enabled ? "primary" : seat.alreadyReserved ? "warning" : "default"
       }
