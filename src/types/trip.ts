@@ -22,6 +22,10 @@ export interface Trip {
   delay: number;
 }
 
+export type TripWithSeats = Trip & {
+  seatsMap: Row[];
+};
+
 export type TripReference = Pick<Trip, "id">;
 
 export type TripSearchParameters = CurrencyParams & {
@@ -30,3 +34,14 @@ export type TripSearchParameters = CurrencyParams & {
   departureTime?: string;
   seats?: number;
 };
+
+export interface Seat {
+  id: number;
+  enabled?: boolean;
+  alreadyReserved: boolean;
+}
+
+export interface Row {
+  id: string;
+  seats: Seat[];
+}

@@ -8,17 +8,6 @@ export interface Reservation {
   user: User;
 }
 
-export interface Seat {
-  id: string;
-  isEnabled: boolean;
-  isAlreadyReserved: boolean;
-}
-
-export interface Row {
-  id: number;
-  seats: Seat[];
-}
-
 export type ReservationCreate = Omit<Reservation, "id" | "trip" | "user"> & {
   trip: TripReference;
   user: UserReference;
