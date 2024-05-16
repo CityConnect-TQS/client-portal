@@ -37,32 +37,6 @@ function Index() {
   const { isPending, data: trip } = useQuery<Trip>({
     queryKey: ["trip", tripId],
     queryFn: () => getTrip(tripId),
-    initialData: {
-      id: 0,
-      departure: {
-        id: 0,
-        name: "",
-        latitude: 0,
-        longitude: 0,
-      },
-      departureTime: new Date(),
-      arrival: {
-        id: 0,
-        name: "",
-        latitude: 0,
-        longitude: 0,
-      },
-      arrivalTime: new Date(),
-      bus: {
-        id: 0,
-        company: "",
-        capacity: 0,
-      },
-      freeSeats: 0,
-      price: 0,
-      status: "ONBOARDING",
-      delay: 0,
-    },
   });
 
   const mutation = useMutation({
@@ -81,11 +55,11 @@ function Index() {
           Book reservation
         </h1>
 
-        {!isPending && (
+        {!isPending && trip && (
           <TripCard trip={trip} isLoaded={!isPending} clickable={true} />
         )}
 
-        <p>Choose up to {trip.freeSeats} places</p>
+        <p>Choose up to {trip?.freeSeats} places</p>
 
         <div className="flex flex-col gap-2">
           {layout.map((row) => (
