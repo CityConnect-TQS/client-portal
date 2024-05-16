@@ -62,7 +62,7 @@ function Index() {
   });
 
   return (
-    <div className="p-2 h-screen flex flex-col">
+    <div className="h-screen flex flex-col">
       <NavbarClient />
       <div className="flex justify-center items-center flex-grow">
         <div>
