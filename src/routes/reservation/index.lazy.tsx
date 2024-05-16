@@ -4,7 +4,7 @@ import TripCard from "@/components/tripcard";
 import { createReservation } from "@/service/reservationService";
 import { getTrip } from "@/service/tripService";
 import { Row, TripWithSeats } from "@/types/trip";
-import { Button, Chip } from "@nextui-org/react";
+import { Button, Chip, CircularProgress } from "@nextui-org/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
 import { useCookies } from "react-cookie";
@@ -53,26 +53,35 @@ function Index() {
           Book reservation
         </h1>
 
-        {!isPending && trip && (
-          <TripCard trip={trip} isLoaded={!isPending} clickable={true} />
-        )}
+        {isPending ? (
+          <div>
+            <CircularProgress />
+            <p>Fetching trip...</p>
+          </div>
+        ) : (
+          <>
+            {trip && (
+              <TripCard trip={trip} isLoaded={!isPending} clickable={true} />
+            )}
 
-        <p>Choose up to {trip?.freeSeats} places</p>
+            <p>Choose up to {trip?.freeSeats} places</p>
 
-        <div className="flex flex-col gap-2">
-          {layout.map((row) => (
-            <div key={row.id} className="flex flex-row justify-end gap-2">
-              {row.seats.map((seat) => (
-                <SeatButton
-                  key={seat.id}
-                  row={row}
-                  seat={seat}
-                  setLayout={setLayout}
-                />
+            <div className="flex flex-col gap-2">
+              {layout.map((row) => (
+                <div key={row.id} className="flex flex-row justify-end gap-2">
+                  {row.seats.map((seat) => (
+                    <SeatButton
+                      key={seat.id}
+                      row={row}
+                      seat={seat}
+                      setLayout={setLayout}
+                    />
+                  ))}
+                </div>
               ))}
             </div>
-          ))}
-        </div>
+          </>
+        )}
 
         {user ? (
           <>
