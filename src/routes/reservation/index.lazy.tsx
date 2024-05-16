@@ -4,8 +4,7 @@ import TripCard from "@/components/tripcard";
 import { dummyLayout } from "@/dummy/seats";
 import { createReservation } from "@/service/reservationService";
 import { getTrip } from "@/service/tripService";
-import { Row } from "@/types/reservation";
-import { Trip } from "@/types/trip";
+import { Row, Trip } from "@/types/trip";
 import { Button, Chip } from "@nextui-org/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
@@ -29,13 +28,13 @@ function Index() {
       acc +
       row.seats.reduce(
         (acc, seat) =>
-          seat.isEnabled && !seat.isAlreadyReserved ? acc + 1 : acc,
+          seat.enabled && !seat.alreadyReserved ? acc + 1 : acc,
         0,
       ),
     0,
   );
 
-  const { isPending: isPending, data: trip } = useQuery<Trip>({
+  const { isPending, data: trip } = useQuery<Trip>({
     queryKey: ["trip", tripId],
     queryFn: () => getTrip(tripId),
     initialData: {
@@ -61,6 +60,8 @@ function Index() {
       },
       freeSeats: 0,
       price: 0,
+      status: "ONBOARDING",
+      delay: 0,
     },
   });
 
