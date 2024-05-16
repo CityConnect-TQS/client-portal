@@ -1,17 +1,16 @@
 import { NavbarClient } from "@/components/navbar";
 import SeatButton from "@/components/seatButton";
 import TripCard from "@/components/tripcard";
-import { dummyLayout } from "@/dummy/seats";
 import { createReservation } from "@/service/reservationService";
 import { getTrip } from "@/service/tripService";
-import { Row, Trip } from "@/types/trip";
+import { Row, TripWithSeats } from "@/types/trip";
 import { Button, Chip } from "@nextui-org/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
 import { useCookies } from "react-cookie";
 import { User } from "@/types/user.ts";
 import { MaterialSymbol } from "react-material-symbols";
+import { useEffect, useState } from "react";
 
 export const Route = createLazyFileRoute("/reservation/")({
   component: Index,
@@ -22,22 +21,21 @@ function Index() {
   const [cookies, setCookie] = useCookies(["trip", "reservation", "user"]);
   const tripId: number = parseInt(cookies.trip as string);
   const user = cookies.user as User | undefined;
-  const [layout, setLayout] = useState<Row[]>(dummyLayout);
-  const seats = layout.reduce(
-    (acc, row) =>
-      acc +
-      row.seats.reduce(
-        (acc, seat) =>
-          seat.enabled && !seat.alreadyReserved ? acc + 1 : acc,
-        0,
-      ),
-    0,
+  const [layout, setLayout] = useState<Row[]>([]);
+  const reserved = layout.flatMap((row) =>
+    row.seats.filter((seat) => seat.enabled).map((seat) => seat.id + row.id),
   );
 
-  const { isPending, data: trip } = useQuery<Trip>({
+  const { isPending, data: trip } = useQuery<TripWithSeats>({
     queryKey: ["trip", tripId],
     queryFn: () => getTrip(tripId),
   });
+
+  useEffect(() => {
+    if (!isPending) {
+      setLayout(trip!.seatsMap);
+    }
+  }, [isPending, trip]);
 
   const mutation = useMutation({
     mutationFn: createReservation,
@@ -89,13 +87,16 @@ function Index() {
             )}
             <Button
               color="primary"
-              isDisabled={seats === 0 || seats > trip.freeSeats}
+              isDisabled={
+                reserved.length === 0 ||
+                reserved.length > (trip?.freeSeats ?? 0)
+              }
               onClick={() => {
                 void mutation.mutateAsync({
                   reservation: {
                     trip: { id: tripId },
                     user: { id: user.id },
-                    seats: seats,
+                    seats: reserved,
                   },
                   jwt: user?.token,
                 });
