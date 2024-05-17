@@ -201,30 +201,36 @@ export default function Trips() {
             <Spinner />
             <p>Loading trips...</p>
           </div>
-        ) : (
-          <div className="flex justify-around pb-16 pt-16" id="trips">
-            {trips?.length !== 0 ? (
-              <div className="grid px-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-2 lg:gap-y-16 md:px-8 gap-12">
-                {trips?.sort((a, b) => a.departureTime.getTime() - b.departureTime.getTime()).map((trip) => (
-                  <TripCard
-                    key={trip.id}
-                    isLoaded={!isTripsPending}
-                    trip={trip}
-                    onClick={() => {
-                      setCookies("trip", trip.id.toString(), { path: "/" });
-                      void navigate({
-                        to: "/reservation",
-                      });
-                    }}
-                  />
-                ))}
-              </div>
-            ) : (
-              <h1 className="text-3xl font-bold pt-32 text-center items-center" id="message">
-                No trips available for this date
-              </h1>
-            )}
+        ) : trips?.length !== 0 ? (
+          <div
+            className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-8 w-full mt-8"
+            id="trips"
+          >
+            {trips
+              ?.sort(
+                (a, b) => a.departureTime.getTime() - b.departureTime.getTime(),
+              )
+              .map((trip) => (
+                <TripCard
+                  key={trip.id}
+                  isLoaded={!isTripsPending}
+                  trip={trip}
+                  onClick={() => {
+                    setCookies("trip", trip.id.toString(), { path: "/" });
+                    void navigate({
+                      to: "/reservation",
+                    });
+                  }}
+                />
+              ))}
           </div>
+        ) : (
+          <h1
+            className="text-3xl font-bold pt-32 text-center items-center"
+            id="message"
+          >
+            No trips available for this date
+          </h1>
         )}
       </div>
     </div>

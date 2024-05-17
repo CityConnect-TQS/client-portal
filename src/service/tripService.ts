@@ -1,9 +1,9 @@
-import { Trip, TripSearchParameters } from "@/types/trip";
+import { Trip, TripSearchParameters, TripWithSeats } from "@/types/trip";
 import { BASE_API_URL } from "./config";
 import { CurrencyParams } from "@/types/currency";
 
 export const getTrips = async (
-  params?: TripSearchParameters
+  params?: TripSearchParameters,
 ): Promise<Trip[]> => {
   const res = await fetch(
     BASE_API_URL +
@@ -13,7 +13,7 @@ export const getTrips = async (
       headers: {
         "Content-Type": "application/json",
       },
-    }
+    },
   );
   const data = (await res.json()) as Trip[];
   data.forEach((trip: Trip) => {
@@ -25,8 +25,8 @@ export const getTrips = async (
 
 export const getTrip = async (
   id: number,
-  params?: CurrencyParams
-): Promise<Trip> => {
+  params?: CurrencyParams,
+): Promise<TripWithSeats> => {
   const res = await fetch(
     BASE_API_URL +
       "trip/" +
@@ -37,9 +37,9 @@ export const getTrip = async (
       headers: {
         "Content-Type": "application/json",
       },
-    }
+    },
   );
-  const data = (await res.json()) as Trip;
+  const data = (await res.json()) as TripWithSeats;
   data.departureTime = new Date(data.departureTime);
   data.arrivalTime = new Date(data.arrivalTime);
   return data;

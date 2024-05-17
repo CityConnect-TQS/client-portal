@@ -1,40 +1,41 @@
-import { Row, Seat } from "@/types/reservation";
+import { Row, Seat } from "@/types/trip";
 import { Button } from "@nextui-org/react";
+import { Dispatch, SetStateAction } from "react";
 
 interface SeatProps {
   row: Row;
   seat: Seat;
-  setLayout: React.Dispatch<React.SetStateAction<Row[]>>;
+  setLayout: Dispatch<SetStateAction<Row[]>>;
 }
 
-export default function SeatButton({ row, seat, setLayout }: SeatProps) {
+export default function SeatButton({
+  row,
+  seat,
+  setLayout,
+}: Readonly<SeatProps>) {
   return (
     <Button
-      key={seat.id}
       variant={"flat"}
+      id={"seat" + seat.id + row.id}
       color={
-        seat.isEnabled
-          ? "primary"
-          : seat.isAlreadyReserved
-            ? "warning"
-            : "default"
+        seat.enabled ? "primary" : seat.alreadyReserved ? "warning" : "default"
       }
       onClick={() => {
         setLayout((layout) =>
           layout.map((r) => ({
             ...r,
             seats: r.seats.map((s) =>
-              s.id + r.id === seat.id + row.id
+              r.id + s.id === row.id + seat.id
                 ? {
                     ...s,
-                    isEnabled: !s.isEnabled,
+                    enabled: !s.enabled,
                   }
-                : s
+                : s,
             ),
-          }))
+          })),
         );
       }}
-      disabled={seat.isAlreadyReserved}
+      disabled={seat.alreadyReserved}
       className={"h-12 rounded-lg"}
       size="sm"
     >

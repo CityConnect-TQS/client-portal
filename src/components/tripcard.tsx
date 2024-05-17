@@ -1,14 +1,14 @@
 import { Trip } from "@/types/trip";
 import {
   Card,
-  CardHeader,
   CardBody,
   CardFooter,
+  CardHeader,
   Divider,
   Skeleton,
 } from "@nextui-org/react";
-import { MaterialSymbol } from "react-material-symbols";
 import { useCookies } from "react-cookie";
+import TripCardProp from "@/components/tripCardProp.tsx";
 
 interface TripCardProps {
   trip: Trip;
@@ -26,69 +26,56 @@ export default function TripCard({
   const [cookies] = useCookies(["currency"]);
 
   return (
-    <Skeleton isLoaded={isLoaded} className="rounded-lg overflow-visible">
-      <Card
-        className="p-2"
-        key={trip.id}
-        id={"tripCard" + trip.id}
-        isPressable={clickable && trip.freeSeats > 0}
-        isDisabled={trip.freeSeats === 0}
-        onClick={onClick}
-      >
-        <CardHeader className="flex flex-col justify-start items-start space-x-80">
-          <div className="flex justify-between space-x-4 self-center items-center">
-            <p className="text-lg font-bold">
-              {trip.departureTime.toLocaleString("en-US", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-                hour: "numeric",
-                minute: "numeric",
-              })}
-            </p>
-            <p className="text-small text-default-500">
-              Arrival at{" "}
-              {trip.arrivalTime.toLocaleString("en-US", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-                hour: "numeric",
-                minute: "numeric",
-              })}
-            </p>
-          </div>
-        </CardHeader>
-        <Divider />
-        <CardBody>
-          <div className="grid grid-cols-2">
-            <div className="flex flex-row gap-2 items-center">
-              <MaterialSymbol icon="near_me" size={20} />
-              <p>{trip.departure.name}</p>
-            </div>
-            <div className="flex flex-row gap-2 items-center">
-              <MaterialSymbol icon="payments" size={20} />
-              <p>
-                {trip.price.toLocaleString("pt-PT", {
-                  style: "currency",
-                  currency: (cookies.currency as string) || "EUR",
-                })}
-              </p>
-            </div>
-            <div className="flex flex-row gap-2 items-center">
-              <MaterialSymbol icon="pin_drop" size={20} />
-              <p>{trip.arrival.name}</p>
-            </div>
-            <div className="flex flex-row gap-2 items-center">
-              <MaterialSymbol icon="directions_bus" size={20} />
-              <p>{trip.bus.capacity}-seat bus</p>
-            </div>
-          </div>
-        </CardBody>
-        <Divider />
-        <CardFooter>
-          {trip.freeSeats === 0 ? "No" : trip.freeSeats} seats available
-        </CardFooter>
-      </Card>
-    </Skeleton>
+    <Card
+      className="p-2"
+      key={trip.id}
+      id={"tripCard" + trip.id}
+      isPressable={clickable && trip.freeSeats > 0}
+      isDisabled={trip.freeSeats === 0}
+      onClick={onClick}
+    >
+      <CardHeader className="flex justify-between gap-8 items-center">
+        <Skeleton isLoaded={isLoaded} className={"rounded"}>
+          <p className="text-lg font-bold">
+            {isLoaded
+              ? trip.departureTime.toLocaleString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                  hour: "numeric",
+                  minute: "numeric",
+                })
+              : ""}
+          </p>
+        </Skeleton>
+        <p className="text-small text-default-500">
+          Arrival at{" "}
+          {trip.arrivalTime.toLocaleString("en-US", {
+            hour: "numeric",
+            minute: "numeric",
+          })}
+        </p>
+      </CardHeader>
+      <Divider />
+      <CardBody className="grid grid-cols-2">
+        <TripCardProp icon={"near_me"} title={trip.departure.name} />
+        <TripCardProp
+          icon={"payments"}
+          title={trip.price.toLocaleString("pt-PT", {
+            style: "currency",
+            currency: (cookies.currency as string) || "EUR",
+          })}
+        />
+        <TripCardProp icon={"pin_drop"} title={trip.arrival.name} />
+        <TripCardProp
+          icon={"directions_bus"}
+          title={trip.bus.capacity + "-seat bus"}
+        />
+      </CardBody>
+      <Divider />
+      <CardFooter>
+        {trip.freeSeats === 0 ? "No" : trip.freeSeats} seats available
+      </CardFooter>
+    </Card>
   );
 }

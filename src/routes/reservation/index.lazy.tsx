@@ -1,18 +1,16 @@
 import { NavbarClient } from "@/components/navbar";
 import SeatButton from "@/components/seatButton";
 import TripCard from "@/components/tripcard";
-import { dummyLayout } from "@/dummy/seats";
 import { createReservation } from "@/service/reservationService";
 import { getTrip } from "@/service/tripService";
-import { Row } from "@/types/reservation";
-import { Trip } from "@/types/trip";
-import { Button, Chip } from "@nextui-org/react";
+import { Row, TripWithSeats } from "@/types/trip";
+import { Button, Chip, CircularProgress } from "@nextui-org/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
 import { useCookies } from "react-cookie";
 import { User } from "@/types/user.ts";
 import { MaterialSymbol } from "react-material-symbols";
+import { useEffect, useState } from "react";
 
 export const Route = createLazyFileRoute("/reservation/")({
   component: Index,
@@ -23,46 +21,21 @@ function Index() {
   const [cookies, setCookie] = useCookies(["trip", "reservation", "user"]);
   const tripId: number = parseInt(cookies.trip as string);
   const user = cookies.user as User | undefined;
-  const [layout, setLayout] = useState<Row[]>(dummyLayout);
-  const seats = layout.reduce(
-    (acc, row) =>
-      acc +
-      row.seats.reduce(
-        (acc, seat) =>
-          seat.isEnabled && !seat.isAlreadyReserved ? acc + 1 : acc,
-        0,
-      ),
-    0,
+  const [layout, setLayout] = useState<Row[]>([]);
+  const reserved = layout.flatMap((row) =>
+    row.seats.filter((seat) => seat.enabled).map((seat) => seat.id + row.id),
   );
 
-  const { isPending: isPending, data: trip } = useQuery<Trip>({
+  const { isPending, data: trip } = useQuery<TripWithSeats>({
     queryKey: ["trip", tripId],
     queryFn: () => getTrip(tripId),
-    initialData: {
-      id: 0,
-      departure: {
-        id: 0,
-        name: "",
-        latitude: 0,
-        longitude: 0,
-      },
-      departureTime: new Date(),
-      arrival: {
-        id: 0,
-        name: "",
-        latitude: 0,
-        longitude: 0,
-      },
-      arrivalTime: new Date(),
-      bus: {
-        id: 0,
-        company: "",
-        capacity: 0,
-      },
-      freeSeats: 0,
-      price: 0,
-    },
   });
+
+  useEffect(() => {
+    if (!isPending) {
+      setLayout(trip!.seatsMap);
+    }
+  }, [isPending, trip]);
 
   const mutation = useMutation({
     mutationFn: createReservation,
@@ -80,26 +53,35 @@ function Index() {
           Book reservation
         </h1>
 
-        {!isPending && (
-          <TripCard trip={trip} isLoaded={!isPending} clickable={true} />
-        )}
+        {isPending ? (
+          <div>
+            <CircularProgress />
+            <p>Fetching trip...</p>
+          </div>
+        ) : (
+          <>
+            {trip && (
+              <TripCard trip={trip} isLoaded={!isPending} clickable={true} />
+            )}
 
-        <p>Choose up to {trip.freeSeats} places</p>
+            <p>Choose up to {trip?.freeSeats} places</p>
 
-        <div className="flex flex-col gap-2">
-          {layout.map((row) => (
-            <div key={row.id} className="flex flex-row justify-end gap-2">
-              {row.seats.map((seat) => (
-                <SeatButton
-                  key={seat.id}
-                  row={row}
-                  seat={seat}
-                  setLayout={setLayout}
-                />
+            <div className="flex flex-col gap-2">
+              {layout.map((row) => (
+                <div key={row.id} className="flex flex-row justify-end gap-2">
+                  {row.seats.map((seat) => (
+                    <SeatButton
+                      key={"seat" + seat.id + row.id}
+                      row={row}
+                      seat={seat}
+                      setLayout={setLayout}
+                    />
+                  ))}
+                </div>
               ))}
             </div>
-          ))}
-        </div>
+          </>
+        )}
 
         {user ? (
           <>
@@ -114,13 +96,17 @@ function Index() {
             )}
             <Button
               color="primary"
-              isDisabled={seats === 0 || seats > trip.freeSeats}
+              isDisabled={
+                reserved.length === 0 ||
+                reserved.length > (trip?.freeSeats ?? 0)
+              }
+              id={"submitBtn"}
               onClick={() => {
                 void mutation.mutateAsync({
                   reservation: {
                     trip: { id: tripId },
                     user: { id: user.id },
-                    seats: seats,
+                    seats: reserved,
                   },
                   jwt: user?.token,
                 });
@@ -133,6 +119,7 @@ function Index() {
           <Chip
             color="danger"
             variant={"flat"}
+            id={"notSignedInChip"}
             startContent={<MaterialSymbol icon="error" size={20} />}
           >
             You&apos;re currently not signed in. Do it first to create a

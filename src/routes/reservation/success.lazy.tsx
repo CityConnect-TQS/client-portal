@@ -34,10 +34,17 @@ function Success() {
           Book confirmation
         </h1>
 
-        <p>
-          Your trip is booked! The reservation ID is {reservation?.id} and you
-          booked {reservation?.seats} seat{reservation?.seats !== 1 && "s"}.
-        </p>
+        <div className="flex flex-col gap-2 justify-center items-center">
+          <p id={"confirmText"}>
+            Your trip is booked! The reservation ID is {reservation?.id} and you
+            booked {reservation?.seats?.length} seat
+            {reservation?.seats?.length !== 1 && "s"}:
+          </p>
+
+          <p className={"font-bold"}>
+            {Array.from(reservation?.seats ?? []).join(", ")}
+          </p>
+        </div>
 
         {!isPending && (
           <TripCard
