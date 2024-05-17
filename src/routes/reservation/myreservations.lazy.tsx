@@ -41,6 +41,7 @@ function MyReservations() {
     if (tripId) {
       await deleteReservation(tripId, user?.token);
       onOpenChange();
+      window.location.reload(); 
     }
   };
 
@@ -59,7 +60,7 @@ function MyReservations() {
                   key={reservation.id}
                   trip={reservation.trip}
                   isLoaded={!isPending}
-                  onCancel={() => onOpen()} // Pass onCancel prop to open the modal
+                  onCancel={() => onOpen()}
                   onCheckIn={() => {
                     // Add check-in logic here
                   }}

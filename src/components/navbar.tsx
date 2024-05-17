@@ -19,7 +19,7 @@ import { useState } from "react";
 import { ThemeSwitcher } from "./themeSwitcher";
 import { Currency, currencyCodes } from "@/types/currency";
 import { useCookies } from "react-cookie";
-import { useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { User } from "@/types/user.ts";
 import { MaterialSymbol } from "react-material-symbols";
 import LoginModal from "@/components/loginModal.tsx";
@@ -66,11 +66,6 @@ export function NavbarClient() {
           </Button>
         </NavbarBrand>
       </NavbarContent>
-
-      <NavbarContent
-        className="hidden sm:flex gap-4"
-        justify="center"
-      ></NavbarContent>
 
       <NavbarContent justify="end">
         <ThemeSwitcher />
@@ -153,6 +148,25 @@ export function NavbarClient() {
                     }
                   >
                     Sign up
+                  </DropdownItem>
+                )}
+                {user ? (
+                  <DropdownItem
+                    key="reservations"
+                    startContent={<MaterialSymbol icon="book" size={20} />}
+                  >
+                    <Link to="/reservation/myreservations">
+                      My Reservations
+                    </Link>
+                  </DropdownItem>
+                ) : (
+                  <DropdownItem
+                    key="reservations"
+                    startContent={<MaterialSymbol icon="book" size={20} />}
+                  >
+                    <Link to="/reservation/myreservations">
+                      Reservations
+                    </Link>
                   </DropdownItem>
                 )}
               </DropdownSection>
