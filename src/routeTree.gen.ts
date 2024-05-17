@@ -20,6 +20,9 @@ const IndexLazyImport = createFileRoute('/')()
 const TripsIndexLazyImport = createFileRoute('/trips/')()
 const ReservationIndexLazyImport = createFileRoute('/reservation/')()
 const ReservationSuccessLazyImport = createFileRoute('/reservation/success')()
+const ReservationMyreservationsLazyImport = createFileRoute(
+  '/reservation/myreservations',
+)()
 
 // Create/Update Routes
 
@@ -47,12 +50,24 @@ const ReservationSuccessLazyRoute = ReservationSuccessLazyImport.update({
   import('./routes/reservation/success.lazy').then((d) => d.Route),
 )
 
+const ReservationMyreservationsLazyRoute =
+  ReservationMyreservationsLazyImport.update({
+    path: '/reservation/myreservations',
+    getParentRoute: () => rootRoute,
+  } as any).lazy(() =>
+    import('./routes/reservation/myreservations.lazy').then((d) => d.Route),
+  )
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
     '/': {
       preLoaderRoute: typeof IndexLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/reservation/myreservations': {
+      preLoaderRoute: typeof ReservationMyreservationsLazyImport
       parentRoute: typeof rootRoute
     }
     '/reservation/success': {
@@ -74,6 +89,7 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
   IndexLazyRoute,
+  ReservationMyreservationsLazyRoute,
   ReservationSuccessLazyRoute,
   ReservationIndexLazyRoute,
   TripsIndexLazyRoute,

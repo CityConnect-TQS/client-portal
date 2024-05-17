@@ -67,11 +67,6 @@ export function NavbarClient() {
         </NavbarBrand>
       </NavbarContent>
 
-      <NavbarContent
-        className="hidden sm:flex gap-4"
-        justify="center"
-      ></NavbarContent>
-
       <NavbarContent justify="end">
         <ThemeSwitcher />
         <NavbarItem>
@@ -153,6 +148,27 @@ export function NavbarClient() {
                     }
                   >
                     Sign up
+                  </DropdownItem>
+                )}
+                {user ? (
+                  <DropdownItem
+                    key="reservations"
+                    startContent={<MaterialSymbol icon="book" size={20} />}
+                    onClick={() =>
+                      void navigate({ to: "/reservation/myreservations" })
+                    }
+                  >
+                    My Reservations
+                  </DropdownItem>
+                ) : (
+                  <DropdownItem
+                    key="reservations"
+                    startContent={<MaterialSymbol icon="book" size={20} />}
+                    onClick={() =>
+                      void navigate({ to: "/reservation/myreservations" })
+                    }
+                  >
+                    Reservations
                   </DropdownItem>
                 )}
               </DropdownSection>
