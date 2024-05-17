@@ -1,5 +1,5 @@
 import { NavbarClient } from "@/components/navbar";
-import TripCard from "@/components/tripcard";
+import ReservationCard from "@/components/reservationcard";
 import { getUserReservations } from "@/service/userService";
 import { Reservation } from "@/types/reservation";
 import { User } from "@/types/user";
@@ -30,16 +30,21 @@ function MyReservations() {
     <div className="flex flex-col gap-8">
       <NavbarClient />
       <div className="p-8 lg:p-24 flex flex-col items-center justify-center gap-8">
-        <h1 className="font-bold text-3xl lg:text-5xl text-center text-balance">
+        <h1 className="font-bold text-3xl lg:text-5xl text-center text-balance pb-8">
         Your Bookings
         </h1>
-        <div className="grid grid-cols-1 gap-4">
+        <div className="grid lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-16">
           {reservations?.map((reservation) => (
-            <TripCard
+            <ReservationCard
               key={reservation.id}
               trip={reservation.trip}
               isLoaded={!isPending}
-              clickable={true}
+              onCancel={() => {
+                // Add cancellation logic here
+              }}
+              onCheckIn={() => {
+                // Add check-in logic here
+              }}
             />
           ))}
         </div>
