@@ -19,7 +19,7 @@ import { useState } from "react";
 import { ThemeSwitcher } from "./themeSwitcher";
 import { Currency, currencyCodes } from "@/types/currency";
 import { useCookies } from "react-cookie";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { User } from "@/types/user.ts";
 import { MaterialSymbol } from "react-material-symbols";
 import LoginModal from "@/components/loginModal.tsx";
@@ -154,19 +154,21 @@ export function NavbarClient() {
                   <DropdownItem
                     key="reservations"
                     startContent={<MaterialSymbol icon="book" size={20} />}
+                    onClick={() =>
+                      void navigate({ to: "/reservation/myreservations" })
+                    }
                   >
-                    <Link to="/reservation/myreservations">
-                      My Reservations
-                    </Link>
+                    My Reservations
                   </DropdownItem>
                 ) : (
                   <DropdownItem
                     key="reservations"
                     startContent={<MaterialSymbol icon="book" size={20} />}
+                    onClick={() =>
+                      void navigate({ to: "/reservation/myreservations" })
+                    }
                   >
-                    <Link to="/reservation/myreservations">
-                      Reservations
-                    </Link>
+                    Reservations
                   </DropdownItem>
                 )}
               </DropdownSection>

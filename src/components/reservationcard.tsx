@@ -23,7 +23,7 @@ export default function ReservationCard({
   isLoaded,
   onCancel,
   onCheckIn,
-}: ReservationCardProps) {
+}: Readonly<ReservationCardProps>) {
   const [cookies] = useCookies(["currency"]);
 
   return (
