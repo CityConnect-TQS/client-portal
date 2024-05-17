@@ -3,8 +3,9 @@ import {
   Button,
   Autocomplete,
   AutocompleteItem,
+  Card,
 } from "@nextui-org/react";
-import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
+import { Link, createLazyFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { NavbarClient } from "@/components/navbar";
 import { useQuery } from "@tanstack/react-query";
@@ -129,6 +130,20 @@ function Index() {
             </Button>
           </div>
         </div>
+      </div>
+      <div className="lg:px-96 lg:pb-32 md:px-12 md:pb-12">
+        <Link to="/reservation/myreservations">
+          <Card isFooterBlurred radius="lg" className="border-none">
+            <div className="grid place-content-center h-48 space-y-8">
+              <h1 className="text-2xl font-bold text-center">
+                Manage My Bookings
+              </h1>
+              <Button color="primary" size="lg" className="h-14 w-full">
+                View My Bookings
+              </Button>
+            </div>
+          </Card>
+        </Link>
       </div>
     </div>
   );
