@@ -49,32 +49,6 @@ export const getReservation = async (
   return data;
 };
 
-export const getReservations = async (
-  jwt: string,
-  params?: CurrencyParams,
-): Promise<Reservation[]> => {
-  const res = await fetch(
-    BASE_API_URL +
-      "backoffice/reservation?" +
-      new URLSearchParams(params as Record<string, string>),
-    {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + jwt,
-      },
-    },
-  );
-
-  const data = (await res.json()) as Reservation[];
-  data.forEach((reservation) => {
-    reservation.trip.departureTime = new Date(reservation.trip.departureTime);
-    reservation.trip.arrivalTime = new Date(reservation.trip.arrivalTime);
-  });
-
-  return data;
-}
-
-
 export const deleteReservation = async (
   id: number,
   jwt: string,
