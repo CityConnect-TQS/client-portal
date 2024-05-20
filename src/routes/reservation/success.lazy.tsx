@@ -30,7 +30,7 @@ function Success() {
     <div className="flex flex-col gap-8">
       <NavbarClient />
       <div className="p-8 lg:p-24 flex flex-col items-center justify-center gap-8">
-        <h1 className="font-bold text-3xl lg:text-5xl text-center text-balance">
+        <h1 id="pageTitle" className="font-bold text-3xl lg:text-5xl text-center text-balance">
           Book confirmation
         </h1>
 
@@ -41,7 +41,7 @@ function Success() {
             {reservation?.seats?.length !== 1 && "s"}:
           </p>
 
-          <p className={"font-bold"}>
+          <p id={"selectedSeats"} className={"font-bold"}>
             {Array.from(reservation?.seats ?? []).join(", ")}
           </p>
         </div>
