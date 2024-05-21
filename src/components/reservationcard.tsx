@@ -5,17 +5,20 @@ import {
   CardBody,
   CardFooter,
   CardHeader,
+  Chip,
   Divider,
   Skeleton,
 } from "@nextui-org/react";
 import { useCookies } from "react-cookie";
 import TripCardProp from "@/components/tripCardProp.tsx";
+import { MaterialSymbol } from "react-material-symbols";
 
 interface ReservationCardProps {
   trip: Trip;
   isLoaded: boolean;
   onCancel: () => void;
   onCheckIn: () => void;
+  checkIn: boolean;
 }
 
 export default function ReservationCard({
@@ -23,6 +26,7 @@ export default function ReservationCard({
   isLoaded,
   onCancel,
   onCheckIn,
+  checkIn,
 }: Readonly<ReservationCardProps>) {
   const [cookies] = useCookies(["currency"]);
 
@@ -68,8 +72,23 @@ export default function ReservationCard({
       </CardBody>
       <Divider />
       <CardFooter className="flex justify-between">
-        <Button color="danger" onClick={onCancel}>Cancel trip</Button>
-        <Button color="primary" onClick={onCheckIn}>Check-in</Button>
+        <Button color="danger" onClick={onCancel}>
+          Cancel trip
+        </Button>
+        {checkIn ? (
+          <Chip
+            color="success"
+            variant="flat"
+            size="lg"
+            startContent={<MaterialSymbol icon={"check"} size={24} />}
+          >
+            Checked-in
+          </Chip>
+        ) : (
+          <Button color="primary" onClick={onCheckIn}>
+            Check-in
+          </Button>
+        )}
       </CardFooter>
     </Card>
   );
