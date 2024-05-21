@@ -9,7 +9,10 @@ export interface Reservation {
   checkedIn: boolean;
 }
 
-export type ReservationCreate = Omit<Reservation, "id" | "trip" | "user"> & {
+export type ReservationCreate = Omit<
+  Reservation,
+  "id" | "trip" | "user" | "checkedIn"
+> & {
   trip: TripReference;
   user: UserReference;
 };
