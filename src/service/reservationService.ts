@@ -26,7 +26,7 @@ export const createReservation = async ({
 export const getReservation = async (
   id: number,
   jwt: string,
-  params?: CurrencyParams,
+  params?: CurrencyParams
 ): Promise<Reservation> => {
   const res = await fetch(
     BASE_API_URL +
@@ -39,7 +39,7 @@ export const getReservation = async (
         "Content-Type": "application/json",
         Authorization: "Bearer " + jwt,
       },
-    },
+    }
   );
 
   const data = (await res.json()) as Reservation;
@@ -51,10 +51,22 @@ export const getReservation = async (
 
 export const deleteReservation = async (
   id: number,
-  jwt: string,
+  jwt: string
 ): Promise<boolean> =>
   fetch(BASE_API_URL + "reservation/" + id, {
     method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + jwt,
+    },
+  }).then((res) => res.status === 200);
+
+export const checkInReservation = async (
+  id: number,
+  jwt: string
+): Promise<boolean> =>
+  fetch(BASE_API_URL + "reservation/" + id + "/check-in", {
+    method: "PATCH",
     headers: {
       "Content-Type": "application/json",
       Authorization: "Bearer " + jwt,
