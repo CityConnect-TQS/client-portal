@@ -1,6 +1,9 @@
 import { NavbarClient } from "@/components/navbar";
 import ReservationCard from "@/components/reservationcard";
-import { deleteReservation } from "@/service/reservationService";
+import {
+  checkInReservation,
+  deleteReservation,
+} from "@/service/reservationService";
 import { getUserReservations } from "@/service/userService";
 import { Reservation } from "@/types/reservation";
 import { User } from "@/types/user";
@@ -14,7 +17,7 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useCookies } from "react-cookie";
 import { MaterialSymbol } from "react-material-symbols";
@@ -26,6 +29,11 @@ export const Route = createLazyFileRoute("/reservation/myreservations")({
 function MyReservations() {
   const [cookies] = useCookies(["reservation", "user"]);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const {
+    isOpen: isOpen2,
+    onOpen: onOpen2,
+    onOpenChange: onOpenChange2,
+  } = useDisclosure();
   const reservationId: number = parseInt(cookies.reservation as string);
   const user = cookies.user as User;
 
@@ -37,13 +45,28 @@ function MyReservations() {
     },
   });
 
-  const deleteReserve = async (tripId: number) => {
-    if (tripId) {
-      await deleteReservation(tripId, user?.token);
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: () => checkInReservation(reservationId, user?.token),
+    onSuccess: () => {
+      onOpenChange2();
+      void queryClient.invalidateQueries({
+        queryKey: ["reservation", reservationId, user?.token, user?.id],
+      });
+    },
+  });
+
+  // passar para mutation
+  const deleteReserve = useMutation({
+    mutationFn: () => deleteReservation(reservationId, user?.token),
+    onSuccess: () => {
       onOpenChange();
-      window.location.reload(); 
-    }
-  };
+      void queryClient.invalidateQueries({
+        queryKey: ["reservation", reservationId, user?.token, user?.id],
+      });
+    },
+  });
 
   return (
     <div className="flex flex-col gap-8">
@@ -61,9 +84,8 @@ function MyReservations() {
                   trip={reservation.trip}
                   isLoaded={!isPending}
                   onCancel={() => onOpen()}
-                  onCheckIn={() => {
-                    // Add check-in logic here
-                  }}
+                  onCheckIn={() => onOpen2()}
+                  checkIn={reservation.checkedIn}
                 />
               ))}
             </div>
@@ -84,13 +106,43 @@ function MyReservations() {
                       <Button
                         color="danger"
                         onPress={() => {
-                          void deleteReserve(reservationId);
+                          deleteReserve.mutate();
                         }}
                       >
                         Yes, I&apos;m sure
                       </Button>
                       <Button color="primary" variant="flat" onClick={onOpen}>
                         No, I changed my mind
+                      </Button>
+                    </ModalFooter>
+                  </>
+                )}
+              </ModalContent>
+            </Modal>
+            <Modal isOpen={isOpen2} onOpenChange={onOpenChange}>
+              <ModalContent>
+                {() => (
+                  <>
+                    <ModalHeader className="flex flex-col gap-1">
+                      Check in Reservation
+                    </ModalHeader>
+                    <ModalBody>
+                      <p>
+                        You&apos;re about to check in this reservation. Click on
+                        the button to confirm.
+                      </p>
+                    </ModalBody>
+                    <ModalFooter className="flex justify-between flex-row-reverse">
+                      <Button
+                        color="primary"
+                        onClick={() => {
+                          void mutation.mutate();
+                        }}
+                      >
+                        Check-in
+                      </Button>
+                      <Button color="danger" onClick={onOpen}>
+                        Cancel
                       </Button>
                     </ModalFooter>
                   </>

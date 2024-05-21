@@ -6,6 +6,7 @@ export interface Reservation {
   seats: string[];
   trip: Trip;
   user: User;
+  checkedIn: boolean;
 }
 
 export type ReservationCreate = Omit<Reservation, "id" | "trip" | "user"> & {

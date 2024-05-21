@@ -32,19 +32,26 @@ export const loginUser = async (user: UserLogin): Promise<User> =>
 
 export const getUserReservations = async (
   id: number,
-  jwt: string,
-): Promise<Reservation[]> =>
-  fetch(BASE_API_URL + "user/" + id + "/reservations", {
+  jwt: string
+): Promise<Reservation[]> => {
+  const res = await fetch(BASE_API_URL + "user/" + id + "/reservations", {
     headers: {
       "Content-Type": "application/json",
       Authorization: "Bearer " + jwt,
     },
-  }).then((res) => res.json() as Promise<Reservation[]>);
+  });
+  const data = (await res.json()) as Reservation[];
+  data.forEach((reservation: Reservation) => {
+    reservation.trip.departureTime = new Date(reservation.trip.departureTime);
+    reservation.trip.arrivalTime = new Date(reservation.trip.arrivalTime);
+  });
+  return data;
+};
 
 export const updateUser = async (
   id: number,
   user: UserCreate,
-  jwt: string,
+  jwt: string
 ): Promise<User> =>
   fetch(BASE_API_URL + "user/" + id, {
     method: "PUT",
