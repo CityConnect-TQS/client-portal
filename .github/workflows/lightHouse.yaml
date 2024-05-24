@@ -37,7 +37,7 @@ jobs:
         with:
           urls: |
             http://localhost
-            http://localhost/trips
+            http://localhost/trips?arrival=2&departure=1&departureTime=2024-05-24
           uploadArtifacts: true
           temporaryPublicStorage: true
 
