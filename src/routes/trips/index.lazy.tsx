@@ -89,20 +89,29 @@ export default function Trips() {
       queryFn: () => getCities(),
     }) || [];
 
-  const { isPending: isTripsPending, data: trips } =
-    useQuery<Trip[]>({
-      queryKey: [
-        "trips",
-        { departure, arrival, seats, departureTime, currency },
-      ],
-      queryFn: () =>
-        getTrips({
-          arrival,
-          departure,
-          seats,
-          departureTime: departureTime.substring(0, 10) + "T00:00:00",
-        }),
-    }) || [];
+  const {
+    isPending: isTripsPending,
+    isLoading: isLoadingTrips,
+    data: trips,
+  } = useQuery<Trip[]>({
+    queryKey: ["trips", { departure, arrival, seats, departureTime, currency }],
+    queryFn: () =>
+      getTrips({
+        arrival,
+        departure,
+        seats,
+        departureTime: departureTime.substring(0, 10) + "T00:00:00",
+      }),
+  }) || [];
+
+  if (isLoadingTrips) {
+    return (
+      <div className="flex flex-col gap-4 items-center pt-16">
+        <Spinner />
+        <p>Loading trips...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-8">
@@ -208,7 +217,7 @@ export default function Trips() {
           >
             {trips
               ?.sort(
-                (a, b) => a.departureTime.getTime() - b.departureTime.getTime(),
+                (a, b) => a.departureTime.getTime() - b.departureTime.getTime()
               )
               .map((trip) => (
                 <TripCard
