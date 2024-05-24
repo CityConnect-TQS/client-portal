@@ -138,6 +138,7 @@ function MyReservations() {
                         onClick={() => {
                           void mutation.mutate();
                         }}
+                        id="checkInButton"
                       >
                         Check-in
                       </Button>
