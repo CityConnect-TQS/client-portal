@@ -153,6 +153,7 @@ export function NavbarClient() {
                 {user ? (
                   <DropdownItem
                     key="reservations"
+                    id={"reservationsBtn"}
                     startContent={<MaterialSymbol icon="book" size={20} />}
                     onClick={() =>
                       void navigate({ to: "/reservation/myreservations" })
@@ -163,6 +164,7 @@ export function NavbarClient() {
                 ) : (
                   <DropdownItem
                     key="reservations"
+                    id={"reservationsBtn"}
                     startContent={<MaterialSymbol icon="book" size={20} />}
                     onClick={() =>
                       void navigate({ to: "/reservation/myreservations" })
