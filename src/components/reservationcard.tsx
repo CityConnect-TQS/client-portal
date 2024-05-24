@@ -81,11 +81,12 @@ export default function ReservationCard({
             variant="flat"
             size="lg"
             startContent={<MaterialSymbol icon={"check"} size={24} />}
+            id={"checkInChip"}
           >
             Checked-in
           </Chip>
         ) : (
-          <Button color="primary" onClick={onCheckIn}>
+          <Button color="primary" onClick={onCheckIn} id="docheckin">
             Check-in
           </Button>
         )}
