@@ -10,6 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@capacitor/android": "^6.0.0",
+    "@capacitor/core": "^6.0.0",
+    "@capacitor/ios": "^6.0.0",
     "@fontsource-variable/dm-sans": "^5.0.6",
     "@fontsource/dm-sans": "^5.0.21",
     "@nextui-org/react": "^2.3.5",
@@ -30,6 +33,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@capacitor/cli": "^6.0.0",
     "@tanstack/eslint-plugin-query": "^5.28.11",
     "@tanstack/router-devtools": "^1.29.2",
     "@tanstack/router-vite-plugin": "^1.28.2",
