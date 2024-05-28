@@ -10,7 +10,6 @@ import {
   NavbarBrand,
   NavbarContent,
   NavbarItem,
-  NavbarMenuToggle,
   Select,
   SelectItem,
   useDisclosure,
@@ -27,7 +26,6 @@ import RegisterModal from "@/components/registerModal.tsx";
 
 export function NavbarClient() {
   const navigate = useNavigate();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [cookies, setCookies, removeCookies] = useCookies(["currency", "user"]);
   const currency = (cookies.currency as Currency) ?? "EUR";
   const user = cookies.user !== undefined ? (cookies.user as User) : undefined;
@@ -44,17 +42,14 @@ export function NavbarClient() {
   } = useDisclosure();
 
   return (
-    <Navbar onMenuOpenChange={setIsMenuOpen}>
-      <NavbarContent>
-        <NavbarMenuToggle
-          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-          className="sm:hidden"
-        />
+    <Navbar
+    >
+      <NavbarContent justify={"start"}>
         <NavbarBrand>
           <Button
             onClick={() => void navigate({ to: "/" })}
             size="lg"
-            className="px-4"
+            className="md:px-4"
             variant="light"
           >
             <img
@@ -62,7 +57,9 @@ export function NavbarClient() {
               alt="CityConnect"
               className="h-8 w-auto rounded"
             />
-            <p className="font-bold text-inherit">CityConnect</p>
+            <p className="font-bold text-inherit hidden md:block">
+              CityConnect
+            </p>
           </Button>
         </NavbarBrand>
       </NavbarContent>
