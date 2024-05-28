@@ -165,6 +165,7 @@ export default function RegisterModal({
                     isDisabled={!canSubmit}
                     id={"signUpBtn"}
                     onClick={() => void handleSubmit().then(onClose)}
+                    onPress={() => void handleSubmit().then(onClose)}
                   >
                     {isSubmitting ? (
                       <CircularProgress

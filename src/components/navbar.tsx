@@ -65,6 +65,7 @@ export function NavbarClient() {
         <NavbarBrand>
           <Button
             onClick={() => void navigate({ to: "/" })}
+            onPress={() => void navigate({ to: "/" })}
             size="lg"
             className="md:px-4"
             variant="light"
@@ -137,6 +138,7 @@ export function NavbarClient() {
                     key="login"
                     id={"loginBtn"}
                     onClick={onOpenLogin}
+                    onPress={onOpenLogin}
                     startContent={<MaterialSymbol icon="login" size={20} />}
                   >
                     Login
@@ -149,6 +151,7 @@ export function NavbarClient() {
                     id={"logoutBtn"}
                     startContent={<MaterialSymbol icon="logout" size={20} />}
                     onClick={() => removeCookies("user")}
+                    onPress={() => removeCookies("user")}
                   >
                     Log Out
                   </DropdownItem>
@@ -157,6 +160,7 @@ export function NavbarClient() {
                     key="register"
                     id={"signUpBtn"}
                     onClick={onOpenRegister}
+                    onPress={onOpenRegister}
                     startContent={
                       <MaterialSymbol icon="app_registration" size={20} />
                     }
@@ -172,6 +176,9 @@ export function NavbarClient() {
                     onClick={() =>
                       void navigate({ to: "/reservation/myreservations" })
                     }
+                    onPress={() =>
+                      void navigate({ to: "/reservation/myreservations" })
+                    }
                   >
                     My Reservations
                   </DropdownItem>
@@ -181,6 +188,9 @@ export function NavbarClient() {
                     id={"reservationsBtn"}
                     startContent={<MaterialSymbol icon="book" size={20} />}
                     onClick={() =>
+                      void navigate({ to: "/reservation/myreservations" })
+                    }
+                    onPress={() =>
                       void navigate({ to: "/reservation/myreservations" })
                     }
                   >

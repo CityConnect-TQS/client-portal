@@ -1,8 +1,8 @@
 import {
-  DatePicker,
-  Button,
   Autocomplete,
   AutocompleteItem,
+  Button,
+  DatePicker,
 } from "@nextui-org/react";
 import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
@@ -29,7 +29,7 @@ function Index() {
   const [departure, setDeparture] = useState<number>(0);
   const [arrival, setArrival] = useState<number>(0);
   const [departureTime, setDepartureTime] = useState<string>(
-    new Date().toISOString().substring(0, 10)
+    new Date().toISOString().substring(0, 10),
   );
 
   const isFormValid = departure !== 0 && arrival !== 0 && departureTime !== "";
@@ -124,6 +124,7 @@ function Index() {
               id="searchBtn"
               isDisabled={!isFormValid}
               onClick={handleSearch}
+              onPress={handleSearch}
             >
               Search
             </Button>

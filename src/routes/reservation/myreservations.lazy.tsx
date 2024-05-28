@@ -111,7 +111,7 @@ function MyReservations() {
                       >
                         Yes, I&apos;m sure
                       </Button>
-                      <Button color="primary" variant="flat" onClick={onOpen}>
+                      <Button color="primary" variant="flat" onClick={onOpen} onPress={onOpen}>
                         No, I changed my mind
                       </Button>
                     </ModalFooter>
@@ -138,11 +138,14 @@ function MyReservations() {
                         onClick={() => {
                           void mutation.mutate();
                         }}
+                        onPress={() => {
+                          void mutation.mutate();
+                        }}
                         id="checkInButton"
                       >
                         Check-in
                       </Button>
-                      <Button color="danger" onClick={onOpen}>
+                      <Button color="danger" onClick={onOpen} onPress={onOpen}>
                         Cancel
                       </Button>
                     </ModalFooter>

@@ -200,6 +200,7 @@ export default function Trips() {
               size="lg"
               className="h-14 w-full"
               onClick={updateParameters}
+              onPress={updateParameters}
             >
               Search
             </Button>

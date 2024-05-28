@@ -41,6 +41,7 @@ export function ThemeSwitcher() {
         variant="ghost"
         className="border-none"
         onClick={switchTheme}
+        onPress={switchTheme}
       >
         {iconComponent}
       </Button>

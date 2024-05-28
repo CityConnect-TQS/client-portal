@@ -72,7 +72,7 @@ export default function ReservationCard({
       </CardBody>
       <Divider />
       <CardFooter className="flex justify-between">
-        <Button color="danger" onClick={onCancel}>
+        <Button color="danger" onClick={onCancel} onPress={onCancel}>
           Cancel trip
         </Button>
         {checkIn ? (
@@ -86,7 +86,7 @@ export default function ReservationCard({
             Checked-in
           </Chip>
         ) : (
-          <Button color="primary" onClick={onCheckIn} id="docheckin">
+          <Button color="primary" onClick={onCheckIn} onPress={onCheckIn} id="docheckin">
             Check-in
           </Button>
         )}

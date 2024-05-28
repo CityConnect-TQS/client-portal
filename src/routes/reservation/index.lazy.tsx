@@ -49,7 +49,10 @@ function Index() {
     <div className="flex flex-col gap-8">
       <NavbarClient />
       <div className="p-8 lg:p-24 flex flex-col items-center justify-center gap-8">
-        <h1 id="pageTitle" className="font-bold text-3xl lg:text-5xl text-center text-balance">
+        <h1
+          id="pageTitle"
+          className="font-bold text-3xl lg:text-5xl text-center text-balance"
+        >
           Book reservation
         </h1>
 
@@ -102,6 +105,16 @@ function Index() {
               }
               id={"submitBtn"}
               onClick={() => {
+                void mutation.mutateAsync({
+                  reservation: {
+                    trip: { id: tripId },
+                    user: { id: user.id },
+                    seats: reserved,
+                  },
+                  jwt: user?.token,
+                });
+              }}
+              onPress={() => {
                 void mutation.mutateAsync({
                   reservation: {
                     trip: { id: tripId },

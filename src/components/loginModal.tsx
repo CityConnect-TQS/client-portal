@@ -145,6 +145,13 @@ export default function LoginModal({
                           console.log("Error", "Failed to log in");
                         });
                     }}
+                    onPress={() => {
+                      handleSubmit()
+                        .then(onClose)
+                        .catch(() => {
+                          console.log("Error", "Failed to log in");
+                        });
+                    }}
                   >
                     {isSubmitting ? (
                       <CircularProgress

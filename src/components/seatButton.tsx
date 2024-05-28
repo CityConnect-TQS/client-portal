@@ -13,6 +13,22 @@ export default function SeatButton({
   seat,
   setLayout,
 }: Readonly<SeatProps>) {
+  const updateSeat = () => {
+    setLayout((layout) =>
+      layout.map((r) => ({
+        ...r,
+        seats: r.seats.map((s) =>
+          r.id + s.id === row.id + seat.id
+            ? {
+              ...s,
+              enabled: !s.enabled,
+            }
+            : s,
+        ),
+      })),
+    );
+  };
+
   return (
     <Button
       variant={"flat"}
@@ -20,21 +36,8 @@ export default function SeatButton({
       color={
         seat.enabled ? "primary" : seat.alreadyReserved ? "warning" : "default"
       }
-      onClick={() => {
-        setLayout((layout) =>
-          layout.map((r) => ({
-            ...r,
-            seats: r.seats.map((s) =>
-              r.id + s.id === row.id + seat.id
-                ? {
-                    ...s,
-                    enabled: !s.enabled,
-                  }
-                : s,
-            ),
-          })),
-        );
-      }}
+      onClick={updateSeat}
+      onPress={updateSeat}
       disabled={seat.alreadyReserved}
       className={"h-12 rounded-lg"}
       size="sm"

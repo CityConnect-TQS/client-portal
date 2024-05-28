@@ -33,6 +33,7 @@ export default function TripCard({
       isPressable={clickable && trip.freeSeats > 0}
       isDisabled={trip.freeSeats === 0}
       onClick={onClick}
+      onPress={onClick}
     >
       <CardHeader className="flex justify-between gap-8 items-center">
         <Skeleton isLoaded={isLoaded} className={"rounded"}>
