@@ -14,7 +14,7 @@ import {
   SelectItem,
   useDisclosure,
 } from "@nextui-org/react";
-import { useState } from "react";
+import { useEffect } from "react";
 import { ThemeSwitcher } from "./themeSwitcher";
 import { Currency, currencyCodes } from "@/types/currency";
 import { useCookies } from "react-cookie";
@@ -23,12 +23,26 @@ import { User } from "@/types/user.ts";
 import { MaterialSymbol } from "react-material-symbols";
 import LoginModal from "@/components/loginModal.tsx";
 import RegisterModal from "@/components/registerModal.tsx";
+import { SafeArea } from "capacitor-plugin-safe-area";
 
 export function NavbarClient() {
   const navigate = useNavigate();
   const [cookies, setCookies, removeCookies] = useCookies(["currency", "user"]);
   const currency = (cookies.currency as Currency) ?? "EUR";
   const user = cookies.user !== undefined ? (cookies.user as User) : undefined;
+
+  useEffect(() => {
+    void (async () => {
+      const safeAreaData = await SafeArea.getSafeAreaInsets();
+      const { insets } = safeAreaData;
+      for (const [key, value] of Object.entries(insets)) {
+        document.documentElement.style.setProperty(
+          `--safe-area-inset-${key}`,
+          `${value}px`,
+        );
+      }
+    })();
+  }, []);
 
   const {
     isOpen: isOpenLogin,
@@ -43,6 +57,9 @@ export function NavbarClient() {
 
   return (
     <Navbar
+      style={{
+        marginTop: "var(--safe-area-inset-top)",
+      }}
     >
       <NavbarContent justify={"start"}>
         <NavbarBrand>
