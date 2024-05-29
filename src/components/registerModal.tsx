@@ -61,6 +61,7 @@ export default function RegisterModal({
 
   return (
     <Modal
+      placement={"top-center"}
       isOpen={isOpen}
       onOpenChange={(isOpen) => {
         onOpenChange(isOpen);

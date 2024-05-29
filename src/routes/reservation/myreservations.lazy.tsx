@@ -89,7 +89,11 @@ function MyReservations() {
                 />
               ))}
             </div>
-            <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+            <Modal
+              placement={"top-center"}
+              isOpen={isOpen}
+              onOpenChange={onOpenChange}
+            >
               <ModalContent>
                 {() => (
                   <>
@@ -111,7 +115,12 @@ function MyReservations() {
                       >
                         Yes, I&apos;m sure
                       </Button>
-                      <Button color="primary" variant="flat" onClick={onOpen} onPress={onOpen}>
+                      <Button
+                        color="primary"
+                        variant="flat"
+                        onClick={onOpen}
+                        onPress={onOpen}
+                      >
                         No, I changed my mind
                       </Button>
                     </ModalFooter>
@@ -119,7 +128,11 @@ function MyReservations() {
                 )}
               </ModalContent>
             </Modal>
-            <Modal isOpen={isOpen2} onOpenChange={onOpenChange}>
+            <Modal
+              placement={"top-center"}
+              isOpen={isOpen2}
+              onOpenChange={onOpenChange}
+            >
               <ModalContent>
                 {() => (
                   <>

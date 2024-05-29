@@ -57,6 +57,7 @@ export default function LoginModal({
 
   return (
     <Modal
+      placement={"top-center"}
       isOpen={isOpen}
       onOpenChange={(isOpen) => {
         onOpenChange(isOpen);
